@@ -1,5 +1,4 @@
 # TS-TP01
-# Ferramenta de Mineração de Repositórios de Software
 
 ## 1. Membros do Grupo
 - Gustavo Amaral Bernardino
