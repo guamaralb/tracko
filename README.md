@@ -1,1 +1,48 @@
 # TS-TP01
+# Ferramenta de Mineração de Repositórios de Software
+
+## 1. Membros do Grupo
+- Gustavo Amaral Bernardino
+- Leonardo Miranda Santos
+- Wesley Marques Daniel Chaves
+
+
+---
+
+## 2. Explicação do Sistema
+
+O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, que permite ao usuário organizar suas atividades do dia a dia.
+
+### Funcionalidades principais:
+
+* **Adicionar tarefa**
+* **Listar tarefas**
+* **Marcar tarefa como concluída**
+* **Remover tarefa**
+* **Filtrar tarefas**
+
+---
+
+## 3. Tecnologias Utilizadas
+
+### Linguagem
+
+* Python
+
+### Estrutura
+
+* Aplicação de linha de comando (CLI)
+
+### Bibliotecas
+
+* `argparse` (para leitura de comandos no terminal)
+* `json` ou `sqlite3` (para persistência de dados)
+
+### Testes
+
+* `pytest`
+
+### Versionamento
+
+* Git
+* GitHub
