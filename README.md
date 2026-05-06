@@ -2,6 +2,7 @@
 
 ## 1. Membros do Grupo
 - Gustavo Amaral Bernardino
+- José Gabriel Vieira de Souza
 - Leonardo Miranda Santos
 - Wesley Marques Daniel Chaves
 
