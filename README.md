@@ -45,3 +45,8 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 
 * Git
 * GitHub
+
+## Inteligência Artificial
+* Claude:
+    * Criação de mensagens de commit
+    * Planejamento da estrutura do sistema a ser testado
