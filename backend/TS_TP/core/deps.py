@@ -3,6 +3,7 @@ from typing import Annotated
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordRequestForm
 from sqlalchemy.orm import Session
+
 from TS_TP.core.database import get_session
 
 # from TS_TP.domain.users.models import UserModel
