@@ -51,11 +51,11 @@ asyncio_default_test_loop_scope = "session"
 
 
 [tool.taskipy.tasks]
-lint = 'ruff check'
 pre_format = 'ruff check --fix'
 format = 'ruff format'
+pre_run = 'task format'
 run = 'fastapi dev TS_TP/app.py'
-pre_test = 'task lint'
+pre_test = 'task format'
 test = 'pytest -s -x --cov=TS_TP -vv'
 post_test = 'coverage html'
 

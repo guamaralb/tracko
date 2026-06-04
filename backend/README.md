@@ -51,3 +51,4 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
     * Criação de mensagens de commit
     * Ajuda com criação da lógica do Unit Of Work para gerenciamento de operações
     * Ajuda com a interpretação e correção de mensagens de erro
+    * Ajuda com a configuração dos testes no pytest
