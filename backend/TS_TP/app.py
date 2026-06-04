@@ -4,7 +4,11 @@ from fastapi import FastAPI
 
 from TS_TP.core.database import engine, table_registry
 from TS_TP.domain.task.task_models import TaskModel  # noqa: F401
-from TS_TP.routers import task_router
+from TS_TP.domain.user.user_models import UserModel  # noqa: F401
+from TS_TP.domain.users_tasks.users_tasks_models import (
+    UserTaskModel,  # noqa: F401
+)
+from TS_TP.routers import task_router, user_router
 
 
 @asynccontextmanager
@@ -15,3 +19,4 @@ async def lifespan(app: FastAPI):
 
 app = FastAPI(lifespan=lifespan)
 app.include_router(task_router.router)
+app.include_router(user_router.router)

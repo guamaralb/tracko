@@ -46,7 +46,7 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 * Git
 * GitHub
 
-## Inteligência Artificial
+### Inteligência Artificial
 * Claude:
     * Criação de mensagens de commit
     * Ajuda com criação da lógica do Unit Of Work para gerenciamento de operações

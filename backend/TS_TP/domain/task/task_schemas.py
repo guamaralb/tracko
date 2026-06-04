@@ -16,6 +16,7 @@ class TaskCreateSchema(BaseModel):
 class TaskReadSchema(BaseModel):
     id: UUID
     title: str
+    creator_user_id: UUID
     description: str | None = None
     start_date: datetime | None = None
     end_date: datetime | None = None

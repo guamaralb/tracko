@@ -1,14 +1,13 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
-from sqlalchemy import (
-    DateTime,
-    String,
-    Text,
-    Uuid,
+from sqlalchemy import DateTime, Enum, ForeignKey, String, Text, Uuid
+from sqlalchemy.orm import (
+    Mapped,
+    mapped_as_dataclass,
+    mapped_column,
+    relationship,
 )
-from sqlalchemy import Enum as SAEnum
-from sqlalchemy.orm import Mapped, mapped_as_dataclass, mapped_column
 
 from TS_TP.core.database import table_registry
 from TS_TP.domain.task.task_enums import TaskStatusEnum
@@ -24,6 +23,10 @@ class TaskModel:
 
     title: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
+    creator_user_id: Mapped[UUID] = mapped_column(
+        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
+    )
+
     description: Mapped[str] = mapped_column(Text, nullable=True)
 
     start_date: Mapped[datetime] = mapped_column(
@@ -35,7 +38,7 @@ class TaskModel:
     )
 
     status: Mapped[TaskStatusEnum] = mapped_column(
-        SAEnum(TaskStatusEnum, values_callable=lambda e: [i.value for i in e]),
+        Enum(TaskStatusEnum, values_callable=lambda e: [i.value for i in e]),
         nullable=False,
         default=TaskStatusEnum.TODO,
     )
@@ -60,3 +63,16 @@ class TaskModel:
         self.modified_at = self.created_at
 
     # Relationships
+    creator: Mapped['UserModel'] = relationship(  # noqa: F821
+        'UserModel',
+        foreign_keys=[creator_user_id],
+        back_populates='created_tasks',
+        init=False,
+    )
+
+    added_users: Mapped[list['UserModel']] = relationship(  # noqa: F821
+        'UserModel',
+        secondary='tasks_users',
+        back_populates='added_tasks',
+        init=False,
+    )
