@@ -49,4 +49,5 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 ## Inteligência Artificial
 * Claude:
     * Criação de mensagens de commit
-    * Planejamento da estrutura do sistema a ser testado
+    * Ajuda com criação da lógica do Unit Of Work para gerenciamento de operações
+    * Ajuda com a interpretação e correção de mensagens de erro
