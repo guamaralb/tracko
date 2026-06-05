@@ -6,7 +6,7 @@ from TS_TP.domain.task.task_models import TaskModel
 from TS_TP.domain.task.task_schemas import TaskCreateSchema
 
 
-def task_service_create(*, uow: UnitOfWork, data: TaskCreateSchema):
+def task_service_create(*, uow: UnitOfWork, data: TaskCreateSchema) -> TaskModel:
     new_task = TaskModel(
         title=data.title,
         creator_user_id=uuid4(),
@@ -18,7 +18,7 @@ def task_service_create(*, uow: UnitOfWork, data: TaskCreateSchema):
     return uow.tasks.add(new_task)
 
 
-def task_service_read_one(*, uow: UnitOfWork, task_id: UUID):
+def task_service_read_one(*, uow: UnitOfWork, task_id: UUID) -> TaskModel:
     task = uow.tasks.get_one(task_id)
 
     if not task:

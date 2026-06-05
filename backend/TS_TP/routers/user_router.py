@@ -5,6 +5,7 @@ from fastapi import APIRouter
 
 from TS_TP.core.deps import SessionDep
 from TS_TP.core.uow import UnitOfWork
+from TS_TP.domain.user.user_models import UserModel
 from TS_TP.domain.user.user_schemas import UserCreateSchema, UserReadSchema
 from TS_TP.domain.user.user_services import (
     user_service_create,
@@ -17,7 +18,7 @@ router = APIRouter(prefix='/users', tags=['users'])
 @router.post(
     '/', response_model=UserReadSchema, status_code=HTTPStatus.CREATED
 )
-def user_route_create(data: UserCreateSchema, session: SessionDep):
+def user_route_create(data: UserCreateSchema, session: SessionDep) -> UserModel:
     with UnitOfWork(session) as uow:
         return user_service_create(uow=uow, data=data)
 
@@ -25,6 +26,6 @@ def user_route_create(data: UserCreateSchema, session: SessionDep):
 @router.get(
     '/{user_id}', response_model=UserReadSchema, status_code=HTTPStatus.OK
 )
-def user_route_read_one(user_id: UUID, session: SessionDep):
+def user_route_read_one(user_id: UUID, session: SessionDep) -> UserModel:
     with UnitOfWork(session) as uow:
         return user_service_read_one(uow=uow, user_id=user_id)

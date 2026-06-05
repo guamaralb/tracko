@@ -10,12 +10,12 @@ class UserRepository:
     def __init__(self, session: Session):
         self._session = session
 
-    def add(self, new_user: UserModel):
+    def add(self, new_user: UserModel) -> UserModel:
         self._session.add(new_user)
         self._session.flush()
         return new_user
 
-    def get_one(self, user_id: UUID):
+    def get_one(self, user_id: UUID) -> UserModel | None:
         user = self._session.scalar(
             select(UserModel).where(UserModel.id == user_id)
         )

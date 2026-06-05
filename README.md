@@ -46,9 +46,21 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 * Git
 * GitHub
 
-### Inteligência Artificial
-* Claude:
-    * Criação de mensagens de commit
-    * Ajuda com criação da lógica do Unit Of Work para gerenciamento de operações
-    * Ajuda com a interpretação e correção de mensagens de erro
-    * Ajuda com a configuração dos testes no pytest
+### Usos de Inteligência Artificial (Claude, copilot)
+* Criação de mensagens de commit
+* Ajuda com criação da lógica do Unit Of Work para gerenciamento de operações
+* Ajuda com a interpretação e correção de mensagens de erro
+* Ajuda com a configuração dos testes no pytest
+* Realizar mudanças simples, mas que afetam um número grande de arquivos
+    * Depois de aproximadamente 10 commits, decidimos adiconar o tipo de retorno a todas as funções
+
+## 4. Como Rodar
+* Backend
+    * Na pasta "backend":
+        * Baixar poetry
+            * pip install poetry
+        * Rodar os comandos:
+            * poetry lock
+            * poetry install
+            * poetry run task run
+                * Esse comando roda o linter e o formater antes de rodar o backend

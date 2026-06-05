@@ -11,6 +11,7 @@ from sqlalchemy.orm import (
 
 from TS_TP.core.database import table_registry
 from TS_TP.domain.task.task_enums import TaskStatusEnum
+from TS_TP.domain.users_tasks.users_tasks_models import UserTaskModel
 
 
 @mapped_as_dataclass(table_registry)
@@ -23,7 +24,7 @@ class TaskModel:
 
     title: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
-    creator_user_id: Mapped[UUID] = mapped_column(
+    user_id_creator: Mapped[UUID] = mapped_column(
         ForeignKey('users.id', ondelete='CASCADE'), nullable=False
     )
 
@@ -63,16 +64,16 @@ class TaskModel:
         self.modified_at = self.created_at
 
     # Relationships
-    creator: Mapped['UserModel'] = relationship(  # noqa: F821
+    user_creator: Mapped['UserModel'] = relationship(  # noqa: F821
         'UserModel',
-        foreign_keys=[creator_user_id],
-        back_populates='created_tasks',
+        foreign_keys=[user_id_creator],
+        back_populates='tasks_created',
         init=False,
     )
 
-    added_users: Mapped[list['UserModel']] = relationship(  # noqa: F821
+    users_attributed: Mapped[list['UserModel']] = relationship(  # noqa: F821
         'UserModel',
-        secondary='tasks_users',
-        back_populates='added_tasks',
+        secondary=UserTaskModel.__table__,
+        back_populates='tasks_attributed',
         init=False,
     )

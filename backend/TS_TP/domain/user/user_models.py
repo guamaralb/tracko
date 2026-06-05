@@ -53,16 +53,16 @@ class UserModel:
         self.modified_at = self.created_at
 
     # Relationships
-    created_tasks: Mapped[list['TaskModel']] = relationship(  # noqa: F821
+    tasks_created: Mapped[list['TaskModel']] = relationship(  # noqa: F821
         'TaskModel',
-        foreign_keys='TaskModel.creator_user_id',
-        back_populates='creator',
+        foreign_keys='TaskModel.user_id_creator',
+        back_populates='user_creator',
         init=False,
     )
 
-    added_tasks: Mapped[list['TaskModel']] = relationship(  # noqa: F821
+    tasks_attributed: Mapped[list['TaskModel']] = relationship(  # noqa: F821
         'TaskModel',
         secondary=UserTaskModel.__table__,
-        back_populates='added_users',
+        back_populates='users_attributed',
         init=False,
     )
