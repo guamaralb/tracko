@@ -3,6 +3,7 @@ from uuid import UUID
 
 from pydantic import BaseModel, ConfigDict
 
+from TS_TP.domain.shared.shared_schemas import FilterPageSchema
 from TS_TP.domain.task.task_enums import TaskStatusEnum
 
 
@@ -13,10 +14,10 @@ class TaskCreateSchema(BaseModel):
     end_date: datetime | None = None
 
 
-class TaskReadSchema(BaseModel):
+class TaskReadOneSchema(BaseModel):
     id: UUID
     title: str
-    creator_user_id: UUID
+    user_id_creator: UUID
     description: str | None = None
     start_date: datetime | None = None
     end_date: datetime | None = None
@@ -27,9 +28,11 @@ class TaskReadSchema(BaseModel):
     model_config = ConfigDict(from_attributes=True)
 
 
-class TaskListReadSchema(BaseModel):
-    tasks: list[TaskReadSchema]
+class TaskReadManySchema(BaseModel):
+    tasks: list[TaskReadOneSchema]
     total: int
+    offset: int
+    limit: int
 
 
 class TaskPatchSchema(BaseModel):
@@ -38,3 +41,11 @@ class TaskPatchSchema(BaseModel):
     start_date: datetime | None = None
     end_date: datetime | None = None
     status: TaskStatusEnum
+
+
+class FilterTaskSchema(FilterPageSchema):
+    title: str | None = None
+    description: str | None = None
+    start_date: datetime | None = None
+    end_date: datetime | None = None
+    status: TaskStatusEnum | None = None

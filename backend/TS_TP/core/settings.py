@@ -14,5 +14,9 @@ class Settings(BaseSettings):
     SECRET_KEY: str
     ALGORITHM: str
 
+    FIRST_ADMIN_USER_EMAIL: str
+    FIRST_ADMIN_USER_NAME: str
+    FIRST_ADMIN_USER_password: str
+
 
 settings = Settings()

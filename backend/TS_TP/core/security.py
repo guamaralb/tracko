@@ -1,6 +1,3 @@
-from datetime import datetime, timedelta
-from zoneinfo import ZoneInfo
-
 from fastapi import Depends
 from fastapi.security import OAuth2PasswordBearer
 from jwt import DecodeError, ExpiredSignatureError, decode, encode
@@ -8,12 +5,13 @@ from pwdlib import PasswordHash
 from sqlalchemy import select
 from sqlalchemy.orm import Session
 
-from TS_TP.core.deps import SessionDep
 from TS_TP.core.core_exc import InvalidToken
+from TS_TP.core.database import get_session
 from TS_TP.core.settings import settings
 from TS_TP.domain.user.user_models import UserModel
 
-pwd_context = PasswordHash.recommended()
+password_context = PasswordHash.recommended()
+
 
 def craete_access_token(data: dict) -> str:
     to_encode = data.copy()
@@ -22,12 +20,13 @@ def craete_access_token(data: dict) -> str:
     )
     return encoded_jwt
 
+
 def get_password_hash(password: str) -> str:
-    return pwd_context.hash(password)
+    return password_context.hash(password)
 
 
 def verify_password(plain_password: str, hashed_password: str) -> bool:
-    return pwd_context.verify(plain_password, hashed_password)
+    return password_context.verify(plain_password, hashed_password)
 
 
 oauth2_scheme = OAuth2PasswordBearer(
@@ -36,7 +35,8 @@ oauth2_scheme = OAuth2PasswordBearer(
 
 
 def get_current_user(
-    session: SessionDep,
+    # Dependency must be explicit since this function is called in core.deps
+    session: Session = Depends(get_session),
     token: str = Depends(oauth2_scheme),
 ) -> UserModel:
     try:
@@ -59,4 +59,3 @@ def get_current_user(
     )
 
     return db_user
-

@@ -1,8 +1,7 @@
 from enum import Enum
 
 
-class TaskStatusEnum(str, Enum):
-    TODO = 'todo'
-    IN_PROGESS = 'in_progress'
-    CANCELLED = 'cancelled'
-    DONE = 'done'
+class UserRoleEnum(str, Enum):
+    ADMIN = 'admin'
+    MANAGER = 'manager'
+    COLLABORATOR = 'collaborator'

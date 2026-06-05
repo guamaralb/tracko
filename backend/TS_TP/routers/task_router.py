@@ -1,14 +1,21 @@
 from http import HTTPStatus
+from typing import Annotated
 from uuid import UUID
 
-from fastapi import APIRouter
+from fastapi import APIRouter, Query
 
-from TS_TP.core.deps import SessionDep
+from TS_TP.core.deps import CurrentUserDep, SessionDep
 from TS_TP.core.uow import UnitOfWork
 from TS_TP.domain.task.task_models import TaskModel
-from TS_TP.domain.task.task_schemas import TaskCreateSchema, TaskReadSchema
+from TS_TP.domain.task.task_schemas import (
+    FilterTaskSchema,
+    TaskCreateSchema,
+    TaskReadManySchema,
+    TaskReadOneSchema,
+)
 from TS_TP.domain.task.task_services import (
     task_service_create,
+    task_service_read_many,
     task_service_read_one,
 )
 
@@ -16,16 +23,40 @@ router = APIRouter(prefix='/tasks', tags=['tasks'])
 
 
 @router.post(
-    '/', response_model=TaskReadSchema, status_code=HTTPStatus.CREATED
+    '/', response_model=TaskReadOneSchema, status_code=HTTPStatus.CREATED
 )
-def task_route_create(data: TaskCreateSchema, session: SessionDep) -> TaskModel:
+def task_route_create(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    data: TaskCreateSchema,
+) -> TaskModel:
     with UnitOfWork(session) as uow:
-        return task_service_create(uow=uow, data=data)
+        return task_service_create(
+            uow=uow, current_user=current_user, data=data
+        )
+
+
+@router.get('/', response_model=TaskReadManySchema, status_code=HTTPStatus.OK)
+def user_route_read_many(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    filter: Annotated[FilterTaskSchema, Query()],
+) -> dict:
+    with UnitOfWork(session) as uow:
+        return task_service_read_many(
+            uow=uow, current_user=current_user, filter=filter
+        )
 
 
 @router.get(
-    '/{task_id}', response_model=TaskReadSchema, status_code=HTTPStatus.OK
+    '/{task_id}', response_model=TaskReadOneSchema, status_code=HTTPStatus.OK
 )
-def task_route_read_one(task_id: UUID, session: SessionDep) -> TaskModel:
+def task_route_read_one(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    task_id: UUID,
+) -> TaskModel:
     with UnitOfWork(session) as uow:
-        return task_service_read_one(uow=uow, task_id=task_id)
+        return task_service_read_one(
+            uow=uow, current_user=current_user, task_id=task_id
+        )

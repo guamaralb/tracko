@@ -5,14 +5,15 @@ from fastapi.testclient import TestClient
 from tests.utils import is_valid_datetime
 
 
-def test_create_user_returns_created(client: TestClient):
+def test_create_user_returns_created(client: TestClient, token_admin: str):
     response = client.post(
         '/users/',
-        headers={},
+        headers={'Authorization': f'Bearer {token_admin}'},
         json={
             'email': 'email@test.com',
-            'pwd_hash': 'Test Hash',
+            'role': 'admin',
             'name': 'Test Name',
+            'password': 'test password',
         },
     )
 
@@ -21,7 +22,7 @@ def test_create_user_returns_created(client: TestClient):
     data = response.json()
 
     assert data['email'] == 'email@test.com'
-    assert data['pwd_hash'] == 'Test Hash'
+    assert 'password_hash' not in data
     assert data['name'] == 'Test Name'
     assert data['is_active']
     assert is_valid_datetime(data['created_at'])

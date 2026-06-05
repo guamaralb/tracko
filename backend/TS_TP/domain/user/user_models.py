@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, DateTime, String, Uuid
+from sqlalchemy import Boolean, DateTime, Enum, String, Uuid
 from sqlalchemy.orm import (
     Mapped,
     mapped_as_dataclass,
@@ -10,6 +10,7 @@ from sqlalchemy.orm import (
 )
 
 from TS_TP.core.database import table_registry
+from TS_TP.domain.user.user_enums import UserRoleEnum
 from TS_TP.domain.users_tasks.users_tasks_models import UserTaskModel
 
 
@@ -27,7 +28,11 @@ class UserModel:
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
-    pwd_hash: Mapped[str] = mapped_column(String(255), nullable=False)
+    role: Mapped[UserRoleEnum] = mapped_column(
+        Enum(UserRoleEnum, values_callable=lambda e: [i.value for i in e])
+    )
+
+    password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
     is_active: Mapped[bool] = mapped_column(
         Boolean, init=False, default=True, nullable=False

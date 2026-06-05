@@ -53,6 +53,7 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 * Ajuda com a configuração dos testes no pytest
 * Realizar mudanças simples, mas que afetam um número grande de arquivos
     * Depois de aproximadamente 10 commits, decidimos adiconar o tipo de retorno a todas as funções
+* Ajuda sobre uma forma elegante de gerenciar permissões (implementação de uma dependency factory)
 
 ## 4. Como Rodar
 * Backend

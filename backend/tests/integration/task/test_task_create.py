@@ -6,10 +6,10 @@ from tests.utils import is_valid_datetime
 from TS_TP.domain.task.task_enums import TaskStatusEnum
 
 
-def test_create_task_returns_created(client: TestClient):
+def test_create_task_returns_created(client: TestClient, token_admin: str):
     response = client.post(
         '/tasks/',
-        headers={},
+        headers={'Authorization': f'Bearer {token_admin}'},
         json={
             'title': 'Test title',
             'description': 'Test description',
