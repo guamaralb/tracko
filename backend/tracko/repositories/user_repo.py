@@ -28,9 +28,6 @@ class UserRepository:
         if filter.email is not None:
             query = query.where(UserModel.email.contains(filter.email))
 
-        if filter.is_active is not None:
-            query = query.where(UserModel.is_active == filter.is_active)
-
         total = self._session.scalar(
             select(func.count()).select_from(query.subquery())
         )
@@ -46,3 +43,7 @@ class UserRepository:
             select(UserModel).where(UserModel.id == user_id)
         )
         return user
+
+    def delete(self, db_user: UserModel) -> None:
+        self._session.delete(db_user)
+        self._session.flush()

@@ -61,24 +61,6 @@ def team_route_read_one(
         )
 
 
-##################################################
-# UserTeam routes
-##################################################
-
-
-@router.post('/{team_id}/members', status_code=HTTPStatus.CREATED)
-def team_route_add_member(
-    session: SessionDep,
-    current_user: CurrentUserDep,
-    team_id: UUID,
-    data: TeamAddMemberSchema,
-) -> TeamMemberReadOneSchema:
-    with UnitOfWork(session) as uow:
-        return team_service_add_member(
-            uow=uow, current_user=current_user, team_id=team_id, data=data
-        )
-
-
 @router.delete(
     '/{team_id}/members/{user_id}', status_code=HTTPStatus.NO_CONTENT
 )
@@ -94,4 +76,22 @@ def team_route_remove_member(
             current_user=current_user,
             team_id=team_id,
             user_id=user_id,
+        )
+
+
+##################################################
+# UserTeam routes
+##################################################
+
+
+@router.post('/{team_id}/members', status_code=HTTPStatus.CREATED)
+def team_route_add_member(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    team_id: UUID,
+    data: TeamAddMemberSchema,
+) -> TeamMemberReadOneSchema:
+    with UnitOfWork(session) as uow:
+        return team_service_add_member(
+            uow=uow, current_user=current_user, team_id=team_id, data=data
         )

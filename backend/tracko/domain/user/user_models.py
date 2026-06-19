@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, DateTime, String, Uuid
+from sqlalchemy import DateTime, String, Uuid
 from sqlalchemy.orm import (
     Mapped,
     mapped_as_dataclass,
@@ -29,10 +29,6 @@ class UserModel:
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
-
-    is_active: Mapped[bool] = mapped_column(
-        Boolean, init=False, default=True, nullable=False
-    )
 
     # Verification
     created_at: Mapped[datetime] = mapped_column(

@@ -48,3 +48,13 @@ def user_service_read_one(
         raise UserNotFound()
     else:
         return UserReadOneSchema.model_validate(user_db)
+
+
+def user_service_delete(
+    *, uow: UnitOfWork, current_user: UserModel, user_id: UUID
+) -> None:
+    db_user = uow.users.get_one(user_id)
+    if not db_user:
+        raise UserNotFound()
+
+    uow.users.delete(db_user)

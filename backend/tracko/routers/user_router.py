@@ -14,6 +14,7 @@ from tracko.domain.user.user_schemas import (
 )
 from tracko.domain.user.user_services import (
     user_service_create,
+    user_service_delete,
     user_service_read_many,
     user_service_read_one,
 )
@@ -69,4 +70,18 @@ def user_route_read_me(
             uow=uow,
             current_user=current_user,
             user_id=current_user.id,
+        )
+
+
+@router.delete('/{user_id}', status_code=HTTPStatus.NO_CONTENT)
+def team_route_remove_member(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    user_id: UUID,
+) -> None:
+    with UnitOfWork(session) as uow:
+        user_service_delete(
+            uow=uow,
+            current_user=current_user,
+            user_id=user_id,
         )

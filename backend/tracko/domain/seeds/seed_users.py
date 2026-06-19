@@ -3,7 +3,6 @@ from sqlalchemy import select
 from tracko.core.deps import SessionDep
 from tracko.core.security import get_password_hash
 from tracko.core.settings import settings
-from tracko.domain.user.user_enums import UserRoleEnum
 from tracko.domain.user.user_models import UserModel
 
 
@@ -24,7 +23,6 @@ def seed_first_admin_user(session: SessionDep):
         user = UserModel(
             email=settings.FIRST_ADMIN_USER_EMAIL,
             name=settings.FIRST_ADMIN_USER_NAME,
-            role=UserRoleEnum.ADMIN,
             password_hash=get_password_hash(
                 settings.FIRST_ADMIN_USER_password
             ),
