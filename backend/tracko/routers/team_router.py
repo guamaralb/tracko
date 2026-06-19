@@ -17,6 +17,7 @@ from tracko.domain.team.team_schemas import (
 from tracko.domain.team.team_services import (
     team_service_add_member,
     team_service_create,
+    team_service_delete,
     team_service_read_many,
     team_service_read_one,
     team_service_remove_member,
@@ -61,21 +62,17 @@ def team_route_read_one(
         )
 
 
-@router.delete(
-    '/{team_id}/members/{user_id}', status_code=HTTPStatus.NO_CONTENT
-)
-def team_route_remove_member(
+@router.delete('/{team_id}', status_code=HTTPStatus.NO_CONTENT)
+def team_route_delete(
     session: SessionDep,
     current_user: CurrentUserDep,
     team_id: UUID,
-    user_id: UUID,
 ) -> None:
     with UnitOfWork(session) as uow:
-        team_service_remove_member(
+        team_service_delete(
             uow=uow,
             current_user=current_user,
             team_id=team_id,
-            user_id=user_id,
         )
 
 
@@ -94,4 +91,22 @@ def team_route_add_member(
     with UnitOfWork(session) as uow:
         return team_service_add_member(
             uow=uow, current_user=current_user, team_id=team_id, data=data
+        )
+
+
+@router.delete(
+    '/{team_id}/members/{user_id}', status_code=HTTPStatus.NO_CONTENT
+)
+def team_route_remove_member(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    team_id: UUID,
+    user_id: UUID,
+) -> None:
+    with UnitOfWork(session) as uow:
+        team_service_remove_member(
+            uow=uow,
+            current_user=current_user,
+            team_id=team_id,
+            user_id=user_id,
         )

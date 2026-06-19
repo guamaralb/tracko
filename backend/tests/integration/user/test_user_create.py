@@ -11,7 +11,6 @@ def test_create_user_returns_created(client: TestClient, token_admin: str):
         headers={'Authorization': f'Bearer {token_admin}'},
         json={
             'email': 'email@test.com',
-            'role': 'admin',
             'name': 'Test Name',
             'password': 'test password',
         },
@@ -24,6 +23,5 @@ def test_create_user_returns_created(client: TestClient, token_admin: str):
     assert data['email'] == 'email@test.com'
     assert 'password_hash' not in data
     assert data['name'] == 'Test Name'
-    assert data['is_active']
     assert is_valid_datetime(data['created_at'])
     assert is_valid_datetime(data['modified_at'])

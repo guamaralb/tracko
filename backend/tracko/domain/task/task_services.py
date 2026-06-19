@@ -46,3 +46,13 @@ def task_service_read_one(
     if not task_db:
         raise TaskNotFound()
     return TaskReadOneSchema.model_validate(task_db)
+
+
+def task_service_delete(
+    *, uow: UnitOfWork, current_user: UserModel, task_id: UUID
+) -> None:
+    task_db = uow.tasks.get_one(task_id)
+    if not task_db:
+        raise TaskNotFound()
+
+    uow.tasks.delete(task_db)

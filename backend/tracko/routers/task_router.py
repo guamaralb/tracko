@@ -14,6 +14,7 @@ from tracko.domain.task.task_schemas import (
 )
 from tracko.domain.task.task_services import (
     task_service_create,
+    task_service_delete,
     task_service_read_many,
     task_service_read_one,
 )
@@ -53,5 +54,17 @@ def task_route_read_one(
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
         return task_service_read_one(
+            uow=uow, current_user=current_user, task_id=task_id
+        )
+
+
+@router.delete('/{task_id}', status_code=HTTPStatus.NO_CONTENT)
+def task_route_delete(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+    task_id: UUID,
+) -> None:
+    with UnitOfWork(session) as uow:
+        return task_service_delete(
             uow=uow, current_user=current_user, task_id=task_id
         )

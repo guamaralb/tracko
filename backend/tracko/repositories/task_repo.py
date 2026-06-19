@@ -54,3 +54,7 @@ class TaskRepository:
             select(TaskModel).where(TaskModel.id == task_id)
         )
         return task
+
+    def delete(self, db_task: TaskModel) -> None:
+        self._session.delete(db_task)
+        self._session.flush()

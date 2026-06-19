@@ -57,6 +57,21 @@ def team_service_read_one(
     return TeamReadOneSchema.model_validate(team_db)
 
 
+def team_service_delete(
+    *, uow: UnitOfWork, current_user: UserModel, team_id: UUID
+) -> None:
+    db_team = uow.users.get_one(team_id)
+    if not db_team:
+        raise TeamNotFound()
+
+    uow.users.delete(db_team)
+
+
+##################################################
+# UserTeam services
+##################################################
+
+
 def team_service_add_member(
     *,
     uow: UnitOfWork,

@@ -45,3 +45,7 @@ class TeamRepository:
             select(TeamModel).where(TeamModel.id == team_id)
         )
         return team
+
+    def delete(self, db_team: TeamModel) -> None:
+        self._session.delete(db_team)
+        self._session.flush()

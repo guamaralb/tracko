@@ -4,7 +4,6 @@ from tracko.core.deps import SessionDep
 from tracko.core.security import craete_access_token, verify_password
 from tracko.domain.auth.auth_exc import WrongCredentials
 from tracko.domain.auth.auth_schemas import TokenSchema
-from tracko.domain.user.user_exc import UserNotActive
 from tracko.domain.user.user_models import UserModel
 
 
@@ -17,9 +16,6 @@ def login_for_access_token_service(
 
     if not db_user:
         raise WrongCredentials()
-
-    if not db_user.is_active:
-        raise UserNotActive()
 
     if not verify_password(form_data.password, db_user.password_hash):
         raise WrongCredentials()

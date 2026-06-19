@@ -9,7 +9,6 @@ from tracko.app import app
 from tracko.core.database import get_session, table_registry
 from tracko.core.security import get_password_hash
 from tracko.core.settings import settings
-from tracko.domain.user.user_enums import UserRoleEnum
 from tracko.domain.user.user_models import UserModel
 
 
@@ -59,7 +58,6 @@ def user_admin(session: Session) -> UserModel:
     user_db = UserModel(
         email='test_admin@test.com',
         name='Test Admin',
-        role=UserRoleEnum.ADMIN,
         password_hash=get_password_hash(password),
     )
 

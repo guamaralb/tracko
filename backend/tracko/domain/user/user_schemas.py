@@ -16,7 +16,6 @@ class UserReadOneSchema(BaseModel):
     id: UUID
     email: EmailStr
     name: str
-    is_active: bool
     created_at: datetime
     modified_at: datetime
 
@@ -39,4 +38,3 @@ class UserPatchSchema(BaseModel):
 class FilterUserSchema(FilterPageSchema):
     name: str | None = None
     email: str | None = None
-    is_active: bool | None = None
