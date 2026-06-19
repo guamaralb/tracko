@@ -8,12 +8,13 @@ from tracko.domain.user.user_schemas import (
     FilterUserSchema,
     UserCreateSchema,
     UserReadManySchema,
+    UserReadOneSchema,
 )
 
 
 def user_service_create(
     *, uow: UnitOfWork, current_user: UserModel, data: UserCreateSchema
-) -> UserModel:
+) -> UserReadOneSchema:
     password_hash = get_password_hash(data.password)
 
     new_user = UserModel(
@@ -22,29 +23,29 @@ def user_service_create(
         name=data.name,
         role=data.role,
     )
-
-    return uow.users.add(new_user)
+    user_db = uow.users.add(new_user)
+    return UserReadOneSchema.model_validate(user_db)
 
 
 def user_service_read_many(
     *, uow: UnitOfWork, current_user: UserModel, filter: FilterUserSchema
 ) -> UserReadManySchema:
-    users, total = uow.users.get_many(filter)
+    users_db, total = uow.users.get_many(filter)
 
-    return {
-        'users': users,
-        'total': total,
-        'offset': filter.offset,
-        'limit': filter.limit,
-    }
+    return UserReadManySchema(
+        users=[UserReadOneSchema.model_validate(u) for u in users_db],
+        total=total,
+        offset=filter.offset,
+        limit=filter.limit,
+    )
 
 
 def user_service_read_one(
     *, uow: UnitOfWork, current_user: UserModel, user_id: UUID
-) -> UserModel:
-    user = uow.users.get_one(user_id)
+) -> UserReadOneSchema:
+    user_db = uow.users.get_one(user_id)
 
-    if not user:
+    if not user_db:
         raise UserNotFound()
     else:
-        return user
+        return UserReadOneSchema.model_validate(user_db)

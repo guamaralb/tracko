@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -16,7 +17,9 @@ class TaskRepository:
         self._session.flush()
         return new_task
 
-    def get_many(self, filter: FilterTaskSchema) -> dict:
+    def get_many(
+        self, filter: FilterTaskSchema
+    ) -> tuple[Sequence[TaskModel], int]:
         query = select(TaskModel)
 
         if filter.title is not None:
@@ -40,11 +43,11 @@ class TaskRepository:
             select(func.count()).select_from(query.subquery())
         )
 
-        users = self._session.scalars(
+        tasks = self._session.scalars(
             query.offset(filter.offset).limit(filter.limit)
         )
 
-        return users.all(), total or 0
+        return tasks.all(), total or 0
 
     def get_one(self, task_id: UUID) -> TaskModel | None:
         task = self._session.scalar(

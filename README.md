@@ -57,7 +57,7 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
 * Ajuda com a configuração do workflow
 
 ## 4. Como Rodar
-* Backend
+* Rodar o Backend
     * Na pasta "backend":
         * Baixar poetry
             * pip install poetry
@@ -66,3 +66,10 @@ O sistema consiste em um **gerenciador de tarefas em linha de comando (CLI)**, q
             * poetry install
             * poetry run task run
                 * Esse comando roda o linter e o formater antes de rodar o backend
+* Rodar Testes de Unidade e Integração
+    * Na pasta "backend":
+        * Rodar o comando?
+            * poetry run task test
+                * Esse comando roda o linter e o formater antes de rodar os testes
+* Rodar o linter e formater
+    * poetry run task format

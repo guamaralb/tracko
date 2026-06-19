@@ -6,7 +6,6 @@ from fastapi import APIRouter, Query
 
 from tracko.core.deps import CurrentUserDep, SessionDep
 from tracko.core.uow import UnitOfWork
-from tracko.domain.user.user_models import UserModel
 from tracko.domain.user.user_schemas import (
     FilterUserSchema,
     UserCreateSchema,
@@ -22,40 +21,36 @@ from tracko.domain.user.user_services import (
 router = APIRouter(prefix='/users', tags=['users'])
 
 
-@router.post(
-    '/', response_model=UserReadOneSchema, status_code=HTTPStatus.CREATED
-)
+@router.post('/', status_code=HTTPStatus.CREATED)
 def user_route_create(
     session: SessionDep,
     current_user: CurrentUserDep,
     data: UserCreateSchema,
-) -> UserModel:
+) -> UserReadOneSchema:
     with UnitOfWork(session) as uow:
         return user_service_create(
             uow=uow, current_user=current_user, data=data
         )
 
 
-@router.get('/', response_model=UserReadManySchema, status_code=HTTPStatus.OK)
+@router.get('/', status_code=HTTPStatus.OK)
 def user_route_read_many(
     session: SessionDep,
     current_user: CurrentUserDep,
     filter: Annotated[FilterUserSchema, Query()],
-) -> dict:
+) -> UserReadManySchema:
     with UnitOfWork(session) as uow:
         return user_service_read_many(
             uow=uow, current_user=current_user, filter=filter
         )
 
 
-@router.get(
-    '/{user_id}', response_model=UserReadOneSchema, status_code=HTTPStatus.OK
-)
+@router.get('/{user_id}', status_code=HTTPStatus.OK)
 def user_route_read_one(
     session: SessionDep,
     current_user: CurrentUserDep,
     user_id: UUID,
-) -> UserModel:
+) -> UserReadOneSchema:
     with UnitOfWork(session) as uow:
         return user_service_read_one(
             uow=uow,
@@ -64,11 +59,11 @@ def user_route_read_one(
         )
 
 
-@router.get('/me', response_model=UserReadOneSchema, status_code=HTTPStatus.OK)
+@router.get('/me', status_code=HTTPStatus.OK)
 def user_route_read_me(
     session: SessionDep,
     current_user: CurrentUserDep,
-) -> UserModel:
+) -> UserReadOneSchema:
     with UnitOfWork(session) as uow:
         return user_service_read_one(
             uow=uow,

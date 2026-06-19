@@ -9,6 +9,8 @@ from tracko.domain.auth.auth_services import (
 router = APIRouter(prefix='/auth', tags=['auth'])
 
 
-@router.post('/token', response_model=TokenSchema)
-def login_for_access_token(form_data: OAuth2FormDep, session: SessionDep):
+@router.post('/token')
+def login_for_access_token(
+    form_data: OAuth2FormDep, session: SessionDep
+) -> TokenSchema:
     return login_for_access_token_service(form_data=form_data, session=session)

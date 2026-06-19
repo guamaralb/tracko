@@ -28,13 +28,13 @@ class TaskModel:
         ForeignKey('users.id', ondelete='CASCADE'), nullable=False
     )
 
-    description: Mapped[str] = mapped_column(Text, nullable=True)
+    description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    start_date: Mapped[datetime] = mapped_column(
+    start_date: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
 
-    end_date: Mapped[datetime] = mapped_column(
+    end_date: Mapped[datetime | None] = mapped_column(
         DateTime(timezone=True), nullable=True
     )
 

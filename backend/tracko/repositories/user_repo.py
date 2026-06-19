@@ -1,3 +1,4 @@
+from collections.abc import Sequence
 from uuid import UUID
 
 from sqlalchemy import func, select
@@ -16,7 +17,9 @@ class UserRepository:
         self._session.flush()
         return new_user
 
-    def get_many(self, filter: FilterUserSchema) -> dict:
+    def get_many(
+        self, filter: FilterUserSchema
+    ) -> tuple[Sequence[UserModel], int]:
         query = select(UserModel)
 
         if filter.name is not None:

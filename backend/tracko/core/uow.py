@@ -11,10 +11,10 @@ class UnitOfWork:
         self.tasks = TaskRepository(session)
         self.users = UserRepository(session)
 
-    def __enter__(self):
+    def __enter__(self) -> 'UnitOfWork':
         return self
 
-    def __exit__(self, exc_type, exc, tb):
+    def __exit__(self, exc_type, exc, tb) -> None:
         if exc_type:
             self._session.rollback()
         else:
