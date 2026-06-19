@@ -5,12 +5,12 @@ from sqlalchemy.engine import Engine
 from sqlalchemy.orm import Session
 from sqlalchemy.pool import StaticPool
 
-from TS_TP.app import app
-from TS_TP.core.database import get_session, table_registry
-from TS_TP.core.security import get_password_hash
-from TS_TP.core.settings import settings
-from TS_TP.domain.user.user_enums import UserRoleEnum
-from TS_TP.domain.user.user_models import UserModel
+from tracko.app import app
+from tracko.core.database import get_session, table_registry
+from tracko.core.security import get_password_hash
+from tracko.core.settings import settings
+from tracko.domain.user.user_enums import UserRoleEnum
+from tracko.domain.user.user_models import UserModel
 
 
 @pytest.fixture
@@ -36,9 +36,9 @@ def session(test_engine: Engine):
 def client(
     session: Session, test_engine: Engine, monkeypatch: pytest.MonkeyPatch
 ):
-    monkeypatch.setattr('TS_TP.core.database.engine', test_engine)
-    monkeypatch.setattr('TS_TP.app.engine', test_engine)
-    monkeypatch.setattr('TS_TP.app.seed_first_admin_user', lambda _: None)
+    monkeypatch.setattr('tracko.core.database.engine', test_engine)
+    monkeypatch.setattr('tracko.app.engine', test_engine)
+    monkeypatch.setattr('tracko.app.seed_first_admin_user', lambda _: None)
 
     def override_get_session():
         yield session

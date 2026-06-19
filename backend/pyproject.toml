@@ -1,11 +1,11 @@
 [project]
-name = "TS-TP"
+name = "tracko"
 version = "0.1.0"
 description = ""
 authors = [
     {name = "guamaralb",email = "gu.amaralb@gmail.com"}
 ]
-readme = "README.md"
+readme = "../README.md"
 requires-python = ">=3.13,<4.0"
 dependencies = [
     "fastapi[standard] (>=0.128.0,<0.129.0)",
@@ -14,7 +14,8 @@ dependencies = [
     "python-dotenv (>=1.2.1,<2.0.0)",
     "pyjwt (>=2.10.1,<3.0.0)",
     "tzdata (>=2025.3,<2026.0)",
-    "passwordlib[argon2] (>=0.3.0,<0.4.0)",
+    "passlib[argon2] (>=1.7.4,<2.0.0)",
+    "pwdlib (>=0.3.0,<0.4.0)",
 ]
 
 [tool.poetry.group.dev.dependencies]
@@ -54,9 +55,9 @@ asyncio_default_test_loop_scope = "session"
 pre_format = 'ruff check --fix'
 format = 'ruff format'
 pre_run = 'task format'
-run = 'fastapi dev TS_TP/app.py'
+run = 'fastapi dev tracko/app.py'
 pre_test = 'task format'
-test = 'pytest -s -x --cov=TS_TP -vv'
+test = 'pytest -s -x --cov=tracko -vv'
 post_test = 'coverage html'
 
 [tool.coverage.run]

@@ -3,7 +3,7 @@ from http import HTTPStatus
 from fastapi.testclient import TestClient
 
 from tests.utils import is_valid_datetime
-from TS_TP.domain.task.task_enums import TaskStatusEnum
+from tracko.domain.task.task_enums import TaskStatusEnum
 
 
 def test_create_task_returns_created(client: TestClient, token_admin: str):
