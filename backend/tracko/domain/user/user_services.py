@@ -21,7 +21,6 @@ def user_service_create(
         email=data.email,
         password_hash=password_hash,
         name=data.name,
-        role=data.role,
     )
     user_db = uow.users.add(new_user)
     return UserReadOneSchema.model_validate(user_db)

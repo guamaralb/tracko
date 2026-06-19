@@ -1,7 +1,7 @@
 from datetime import datetime, timezone
 from uuid import UUID, uuid4
 
-from sqlalchemy import Boolean, DateTime, Enum, String, Uuid
+from sqlalchemy import Boolean, DateTime, String, Uuid
 from sqlalchemy.orm import (
     Mapped,
     mapped_as_dataclass,
@@ -10,7 +10,7 @@ from sqlalchemy.orm import (
 )
 
 from tracko.core.database import table_registry
-from tracko.domain.user.user_enums import UserRoleEnum
+from tracko.domain.user_team.user_team_models import UserTeamModel
 from tracko.domain.users_tasks.users_tasks_models import UserTaskModel
 
 
@@ -27,10 +27,6 @@ class UserModel:
     )
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
-
-    role: Mapped[UserRoleEnum] = mapped_column(
-        Enum(UserRoleEnum, values_callable=lambda e: [i.value for i in e])
-    )
 
     password_hash: Mapped[str] = mapped_column(String(255), nullable=False)
 
@@ -68,6 +64,20 @@ class UserModel:
     tasks_attributed: Mapped[list['TaskModel']] = relationship(  # noqa: F821
         'TaskModel',
         secondary=UserTaskModel.__table__,
+        back_populates='users_attributed',
+        init=False,
+    )
+
+    teams_created: Mapped[list['TeamModel']] = relationship(  # noqa: F821
+        'TeamModel',
+        foreign_keys='TeamModel.user_id_creator',
+        back_populates='user_creator',
+        init=False,
+    )
+
+    teams_attributed: Mapped[list['TeamModel']] = relationship(  # noqa: F821
+        'TeamModel',
+        secondary=UserTeamModel.__table__,
         back_populates='users_attributed',
         init=False,
     )
