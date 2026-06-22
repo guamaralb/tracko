@@ -97,3 +97,32 @@ def test_task_service_read_one_not_found():
 
     with pytest.raises(TaskNotFound):
         task_service_read_one(uow=uow, current_user=user, task_id=uuid4())
+
+def test_task_service_delete_success():
+    uow = MagicMock()
+
+    task = TaskModel(
+        title='Task 1',
+        user_id_creator=uuid4(),
+        description='desc',
+        start_date=None,
+        end_date=None,
+    )
+
+    uow.tasks.get_one.return_value = task
+
+    user = MagicMock()
+
+    task_service_delete(uow=uow, current_user=user, task_id=uuid4())
+
+    uow.tasks.delete.assert_called_once_with(task)
+
+
+def test_task_service_delete_not_found():
+    uow = MagicMock()
+    uow.tasks.get_one.return_value = None
+
+    user = MagicMock()
+
+    with pytest.raises(TaskNotFound):
+        task_service_delete(uow=uow, current_user=user, task_id=uuid4())
