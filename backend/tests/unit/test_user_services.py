@@ -26,9 +26,7 @@ def test_user_service_create():
         email='test@test.com', password='123456', name='Test User'
     )
 
-    current_user = MagicMock()
-
-    result = user_service_create(uow=uow, current_user=current_user, data=data)
+    result = user_service_create(uow=uow, data=data)
 
     uow.users.add.assert_called_once()
 
@@ -114,3 +112,36 @@ def test_user_service_delete_not_found():
         user_service_delete(
             uow=uow, current_user=current_user, user_id=uuid4()
         )
+
+def test_user_service_read_many_mapping(monkeypatch):
+    uow = MagicMock()
+
+    user = UserModel(email="x@y.com", name="X", password_hash="h")
+
+    uow.users.get_many.return_value = ([user], 1)
+
+    result = user_service_read_many(
+        uow=uow,
+        current_user=MagicMock(),
+        filter=FilterUserSchema(offset=0, limit=10)
+    )
+
+    assert result.users[0].email == "x@y.com"
+    assert result.users[0].name == "X"
+
+def test_user_service_read_one_receives_current_user():
+    uow = MagicMock()
+    uow.users.get_one.return_value = UserModel(
+        email="a@a.com", name="A", password_hash="h"
+    )
+
+    current_user = MagicMock()
+
+    user_service_read_one(
+        uow=uow,
+        current_user=current_user,
+        user_id=uuid4()
+    )
+
+    # valida quebra contrato
+    assert True

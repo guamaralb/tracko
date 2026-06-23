@@ -180,3 +180,41 @@ def test_team_service_remove_member_not_in_team():
             team_id=uuid4(),
             user_id=uuid4(),
         )
+
+def test_add_member_team_not_found():
+    uow = MagicMock()
+
+    uow.teams.get_one.return_value = None
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
+
+    with pytest.raises(TeamNotFound):
+        team_service_add_member(
+            uow=uow,
+            current_user=current_user,
+            team_id=uuid4(),
+            data=data
+        )
+
+def test_team_service_create_sets_creator():
+    uow = MagicMock()
+
+    captured = {}
+
+    def fake_add(team):
+        captured["team"] = team
+        return team
+
+    uow.teams.add.side_effect = fake_add
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    data = TeamCreateSchema(name="Team A", description="desc")
+
+    team_service_create(uow=uow, current_user=current_user, data=data)
+
+    assert captured["team"].user_id_creator == current_user.id
