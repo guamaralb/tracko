@@ -62,7 +62,7 @@ def test_task_service_read_many():
     result = task_service_read_many(uow=uow, current_user=user, filter=filter)
 
     uow.tasks.get_many.assert_called_once_with(
-        user_id=user_id, 
+        user_id=user_id,
         filter=filter
     )
 
@@ -93,7 +93,7 @@ def test_task_service_read_one_success():
     result = task_service_read_one(uow=uow, current_user=user, task_id=task_id)
 
     uow.tasks.get_one.assert_called_once_with(
-        user_id=user_id, 
+        user_id=user_id,
         task_id=task_id
     )
     assert result.title == 'Task 1'

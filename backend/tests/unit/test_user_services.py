@@ -26,8 +26,6 @@ def test_user_service_create():
         email='test@test.com', password='123456', name='Test User'
     )
 
-    current_user = MagicMock()
-
     result = user_service_create(uow=uow, data=data)
 
     uow.users.add.assert_called_once()
