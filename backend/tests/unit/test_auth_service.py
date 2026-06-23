@@ -49,4 +49,22 @@ def test_login_user_not_found():
     with pytest.raises(WrongCredentials):
         login_for_access_token_service(form_data, session)
 
+def test_login_wrong_password(monkeypatch):
+    session = MagicMock()
 
+    user = UserModel(
+        email='test@test.com', password_hash='hashed_password', name='Test'
+    )
+
+    session.scalar.return_value = user
+
+    form_data = MagicMock()
+    form_data.username = 'test@test.com'
+    form_data.password = 'wrong'
+
+    monkeypatch.setattr(
+        'tracko.domain.auth.auth_services.verify_password', lambda p, h: False
+    )
+
+    with pytest.raises(WrongCredentials):
+        login_for_access_token_service(form_data, session)
