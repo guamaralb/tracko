@@ -16,6 +16,7 @@ from tracko.domain.user.user_services import (
     user_service_read_one,
 )
 
+
 def test_user_service_create():
     uow = MagicMock()
 
@@ -57,6 +58,7 @@ def test_user_service_read_many():
     assert result.offset == 0
     assert result.limit == limit
 
+
 def test_user_service_read_one_success():
     uow = MagicMock()
 
@@ -86,6 +88,7 @@ def test_user_service_read_one_not_found():
         user_service_read_one(
             uow=uow, current_user=current_user, user_id=uuid4()
         )
+
 
 def test_user_service_delete_success():
     uow = MagicMock()

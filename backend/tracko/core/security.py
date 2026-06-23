@@ -13,7 +13,7 @@ from tracko.domain.user.user_models import UserModel
 password_context = PasswordHash.recommended()
 
 
-def craete_access_token(data: dict) -> str:
+def create_access_token(data: dict) -> str:
     to_encode = data.copy()
     encoded_jwt = encode(
         to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
