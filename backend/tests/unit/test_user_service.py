@@ -33,3 +33,26 @@ def test_user_service_create():
 
     assert result.email == 'test@test.com'
     assert result.name == 'Test User'
+
+
+def test_user_service_read_many():
+    limit = 10
+    uow = MagicMock()
+
+    user = UserModel(email='a@a.com', name='User A', password_hash='hash')
+
+    uow.users.get_many.return_value = ([user], 1)
+
+    filter = FilterUserSchema(offset=0, limit=limit)
+    current_user = MagicMock()
+
+    result = user_service_read_many(
+        uow=uow, current_user=current_user, filter=filter
+    )
+
+    uow.users.get_many.assert_called_once_with(filter)
+
+    assert result.total == 1
+    assert len(result.users) == 1
+    assert result.offset == 0
+    assert result.limit == limit
