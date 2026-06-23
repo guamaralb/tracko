@@ -18,9 +18,11 @@ class TaskRepository:
         return new_task
 
     def get_many(
-        self, filter: FilterTaskSchema
+        self, user_id: UUID, filter: FilterTaskSchema
     ) -> tuple[Sequence[TaskModel], int]:
-        query = select(TaskModel)
+
+        # 2. TRAVA DE SEGURANÇA: A query já nasce filtrando pelo dono!
+        query = select(TaskModel).where(TaskModel.user_id_creator == user_id)
 
         if filter.title is not None:
             query = query.where(TaskModel.title.contains(filter.title))
@@ -49,10 +51,35 @@ class TaskRepository:
 
         return tasks.all(), total or 0
 
-    def get_one(self, task_id: UUID) -> TaskModel | None:
+    def get_one(self, user_id: UUID, task_id: UUID) -> TaskModel | None:
         task = self._session.scalar(
-            select(TaskModel).where(TaskModel.id == task_id)
+            select(TaskModel).where(
+                TaskModel.id == task_id,
+                TaskModel.user_id_creator == user_id
+            )
         )
+        return task
+
+    def update(
+        self, user_id: UUID, task_id: UUID, status: str
+    ) -> TaskModel | None:
+
+        # 1. Busca a tarefa aplicando os dois filtros de uma vez só
+        task = self._session.scalar(
+            select(TaskModel).where(
+                TaskModel.id == task_id,
+                TaskModel.user_id_creator == user_id
+            )
+        )
+
+        # 2. Se não achou (ou se for de outro usuário), barra aqui
+        if not task:
+            return None
+
+        # 3. Atualiza e salva
+        task.status = status
+        self._session.flush()
+
         return task
 
     def delete(self, db_task: TaskModel) -> None:

@@ -13,7 +13,7 @@ from tracko.domain.user.user_schemas import (
 
 
 def user_service_create(
-    *, uow: UnitOfWork, current_user: UserModel, data: UserCreateSchema
+    *, uow: UnitOfWork, data: UserCreateSchema
 ) -> UserReadOneSchema:
     password_hash = get_password_hash(data.password)
 

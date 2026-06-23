@@ -25,13 +25,10 @@ router = APIRouter(prefix='/users', tags=['users'])
 @router.post('/', status_code=HTTPStatus.CREATED)
 def user_route_create(
     session: SessionDep,
-    current_user: CurrentUserDep,
     data: UserCreateSchema,
 ) -> UserReadOneSchema:
     with UnitOfWork(session) as uow:
-        return user_service_create(
-            uow=uow, current_user=current_user, data=data
-        )
+        return user_service_create(uow=uow, data=data)
 
 
 @router.get('/', status_code=HTTPStatus.OK)
@@ -46,6 +43,19 @@ def user_route_read_many(
         )
 
 
+@router.get('/me', status_code=HTTPStatus.OK)
+def user_route_read_me(
+    session: SessionDep,
+    current_user: CurrentUserDep,
+) -> UserReadOneSchema:
+    with UnitOfWork(session) as uow:
+        return user_service_read_one(
+            uow=uow,
+            current_user=current_user,
+            user_id=current_user.id,
+        )
+
+
 @router.get('/{user_id}', status_code=HTTPStatus.OK)
 def user_route_read_one(
     session: SessionDep,
@@ -57,19 +67,6 @@ def user_route_read_one(
             uow=uow,
             current_user=current_user,
             user_id=user_id,
-        )
-
-
-@router.get('/me', status_code=HTTPStatus.OK)
-def user_route_read_me(
-    session: SessionDep,
-    current_user: CurrentUserDep,
-) -> UserReadOneSchema:
-    with UnitOfWork(session) as uow:
-        return user_service_read_one(
-            uow=uow,
-            current_user=current_user,
-            user_id=current_user.id,
         )
 
 
