@@ -98,6 +98,7 @@ def test_task_service_read_one_not_found():
     with pytest.raises(TaskNotFound):
         task_service_read_one(uow=uow, current_user=user, task_id=uuid4())
 
+
 def test_task_service_delete_success():
     uow = MagicMock()
 
