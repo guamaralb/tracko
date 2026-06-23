@@ -36,3 +36,17 @@ def test_login_success(monkeypatch):
     assert result.token_type == 'bearer'
 
     session.scalar.assert_called_once()
+
+
+def test_login_user_not_found():
+    session = MagicMock()
+    session.scalar.return_value = None
+
+    form_data = MagicMock()
+    form_data.username = 'notfound@test.com'
+    form_data.password = '123456'
+
+    with pytest.raises(WrongCredentials):
+        login_for_access_token_service(form_data, session)
+
+
