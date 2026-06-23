@@ -54,3 +54,6 @@ jobs:
 
       - name: Run tests
         run: poetry run pytest -s -x --cov=tracko -vv
+
+      - name: Generate codecov
+        run: pytest --cov --cov-branch --cov-report=xml
