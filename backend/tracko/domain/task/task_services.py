@@ -3,6 +3,7 @@ from uuid import UUID
 from fastapi import HTTPException, status
 
 from tracko.core.uow import UnitOfWork
+from tracko.domain.task.task_exc import TaskNotFound
 from tracko.domain.task.task_models import TaskModel
 from tracko.domain.task.task_schemas import (
     FilterTaskSchema,
@@ -74,7 +75,7 @@ def task_service_read_one(
     # Adicionamos o user_id aqui
     task_db = uow.tasks.get_one(user_id=current_user.id, task_id=task_id)
     if not task_db:
-        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+        raise TaskNotFound()
     return TaskReadOneSchema.model_validate(task_db)
 
 
@@ -84,6 +85,6 @@ def task_service_delete(
     # E adicionamos o user_id aqui também
     task_db = uow.tasks.get_one(user_id=current_user.id, task_id=task_id)
     if not task_db:
-        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+        raise TaskNotFound()
 
     uow.tasks.delete(task_db)

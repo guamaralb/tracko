@@ -43,10 +43,11 @@ def test_task_service_create():
 def test_task_service_read_many():
     uow = MagicMock()
     limit = 10
+    user_id = uuid4()
 
     task = TaskModel(
         title='Task 1',
-        user_id_creator=uuid4(),
+        user_id_creator=user_id,
         description='desc',
         start_date=None,
         end_date=None,
@@ -56,10 +57,14 @@ def test_task_service_read_many():
 
     filter = FilterTaskSchema(offset=0, limit=limit)
     user = MagicMock()
+    user.id = user_id
 
     result = task_service_read_many(uow=uow, current_user=user, filter=filter)
 
-    uow.tasks.get_many.assert_called_once_with(filter)
+    uow.tasks.get_many.assert_called_once_with(
+        user_id=user_id, 
+        filter=filter
+    )
 
     assert result.total == 1
     assert len(result.tasks) == 1
@@ -69,10 +74,11 @@ def test_task_service_read_many():
 
 def test_task_service_read_one_success():
     uow = MagicMock()
+    user_id = uuid4()
 
     task = TaskModel(
         title='Task 1',
-        user_id_creator=uuid4(),
+        user_id_creator=user_id,
         description='desc',
         start_date=None,
         end_date=None,
@@ -82,10 +88,14 @@ def test_task_service_read_one_success():
     uow.tasks.get_one.return_value = task
 
     user = MagicMock()
+    user.id = user_id
 
     result = task_service_read_one(uow=uow, current_user=user, task_id=task_id)
 
-    uow.tasks.get_one.assert_called_once_with(task_id)
+    uow.tasks.get_one.assert_called_once_with(
+        user_id=user_id, 
+        task_id=task_id
+    )
     assert result.title == 'Task 1'
 
 

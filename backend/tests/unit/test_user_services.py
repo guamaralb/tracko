@@ -28,7 +28,7 @@ def test_user_service_create():
 
     current_user = MagicMock()
 
-    result = user_service_create(uow=uow, current_user=current_user, data=data)
+    result = user_service_create(uow=uow, data=data)
 
     uow.users.add.assert_called_once()
 
