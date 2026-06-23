@@ -86,3 +86,28 @@ def test_user_service_read_one_not_found():
         user_service_read_one(
             uow=uow, current_user=current_user, user_id=uuid4()
         )
+
+def test_user_service_delete_success():
+    uow = MagicMock()
+
+    user = UserModel(email='a@a.com', name='User A', password_hash='hash')
+
+    uow.users.get_one.return_value = user
+
+    current_user = MagicMock()
+
+    user_service_delete(uow=uow, current_user=current_user, user_id=uuid4())
+
+    uow.users.delete.assert_called_once_with(user)
+
+
+def test_user_service_delete_not_found():
+    uow = MagicMock()
+    uow.users.get_one.return_value = None
+
+    current_user = MagicMock()
+
+    with pytest.raises(UserNotFound):
+        user_service_delete(
+            uow=uow, current_user=current_user, user_id=uuid4()
+        )
