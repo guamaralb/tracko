@@ -138,6 +138,7 @@ def test_task_service_delete_not_found():
     with pytest.raises(TaskNotFound):
         task_service_delete(uow=uow, current_user=user, task_id=uuid4())
 
+
 def test_task_service_create_sets_creator():
     uow = MagicMock()
 
@@ -165,4 +166,5 @@ def test_task_service_create_sets_creator():
         data=data
     )
 
+    assert result.title == "Test Task"
     assert captured["task"].user_id_creator == current_user.id

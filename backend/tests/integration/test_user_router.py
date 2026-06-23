@@ -1,5 +1,4 @@
 from http import HTTPStatus
-from uuid import uuid4
 
 
 def test_create_user(client):
@@ -70,7 +69,7 @@ def test_read_one_user(client, token_admin):
         headers={"Authorization": f"Bearer {token_admin}"},
     )
 
-    assert response.status_code == 200
+    assert response.status_code == HTTPStatus.OK
     assert response.json()["email"] == "test2@test.com"
 
 
@@ -93,4 +92,4 @@ def test_delete_user(client, token_admin):
         headers={"Authorization": f"Bearer {token_admin}"},
     )
 
-    assert delete_response.status_code == 204
+    assert delete_response.status_code == HTTPStatus.NO_CONTENT

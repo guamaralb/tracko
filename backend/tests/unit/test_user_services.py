@@ -113,6 +113,7 @@ def test_user_service_delete_not_found():
             uow=uow, current_user=current_user, user_id=uuid4()
         )
 
+
 def test_user_service_read_many_mapping(monkeypatch):
     uow = MagicMock()
 
@@ -128,6 +129,7 @@ def test_user_service_read_many_mapping(monkeypatch):
 
     assert result.users[0].email == "x@y.com"
     assert result.users[0].name == "X"
+
 
 def test_user_service_read_one_receives_current_user():
     uow = MagicMock()

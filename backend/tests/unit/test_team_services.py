@@ -181,6 +181,7 @@ def test_team_service_remove_member_not_in_team():
             user_id=uuid4(),
         )
 
+
 def test_add_member_team_not_found():
     uow = MagicMock()
 
@@ -198,6 +199,7 @@ def test_add_member_team_not_found():
             team_id=uuid4(),
             data=data
         )
+
 
 def test_team_service_create_sets_creator():
     uow = MagicMock()

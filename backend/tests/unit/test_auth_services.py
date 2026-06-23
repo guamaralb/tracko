@@ -102,6 +102,7 @@ def test_login_token_payload(monkeypatch):
 
     assert called["data"] == {"sub": "test@test.com"}
 
+
 def test_login_db_exception(monkeypatch):
     session = MagicMock()
     session.scalar.side_effect = Exception("DB error")

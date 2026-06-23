@@ -1,7 +1,4 @@
 from http import HTTPStatus
-from uuid import uuid4
-
-from tracko.domain.user.user_enums import UserRoleEnum
 
 
 def test_create_team(client, token_admin):

@@ -1,7 +1,5 @@
 from http import HTTPStatus
 
-import pytest
-
 
 def test_login_success(client, user_admin):
     response = client.post(
