@@ -108,7 +108,8 @@ def test_user_service_read_many_success(mock_uow, dummy_user):
 def test_user_service_delete_success(mock_uow, dummy_user):
     mock_uow.users.get_one.return_value = dummy_user
 
-    user_service_delete(uow=mock_uow, current_user=dummy_user, user_id=dummy_user.id)
+    user_service_delete(
+        uow=mock_uow, current_user=dummy_user, user_id=dummy_user.id)
 
     mock_uow.users.delete.assert_called_once_with(dummy_user)
 
@@ -117,6 +118,7 @@ def test_user_service_delete_not_found(mock_uow, dummy_user):
     mock_uow.users.get_one.return_value = None
 
     with pytest.raises(UserNotFound):
-        user_service_delete(uow=mock_uow, current_user=dummy_user, user_id=uuid4())
+        user_service_delete(
+            uow=mock_uow, current_user=dummy_user, user_id=uuid4())
 
     mock_uow.users.delete.assert_not_called()

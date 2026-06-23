@@ -22,6 +22,8 @@ from tracko.domain.task.task_services import (
 )
 from tracko.domain.user.user_models import UserModel
 
+NOT_FOUND_CODE = 404
+
 
 # --- FIXTURES (Dados falsos para usar nos testes) ---
 @pytest.fixture
@@ -66,14 +68,14 @@ def test_task_service_create_success(mock_uow, mock_user, dummy_task):
         description="Fazer testes de unidade"
     )
 
-    # 2. Configura o banco falso para retornar a dummy_task quando o 'add' for chamado
     mock_uow.tasks.add.return_value = dummy_task
 
     # 3. Chama o serviço
-    result = task_service_create(uow=mock_uow, current_user=mock_user, data=schema_in)
+    result = task_service_create(uow=mock_uow, current_user=mock_user,
+                                 data=schema_in)
 
     # 4. Verificações (Asserts)
-    mock_uow.tasks.add.assert_called_once()  # Garante que tentou salvar no banco
+    mock_uow.tasks.add.assert_called_once()  # Garante que tentou salvar
     assert result.title == "Estudar Pytest"
     assert result.id == dummy_task.id
 
@@ -89,7 +91,8 @@ def test_task_service_read_many_success(mock_uow, mock_user, dummy_task):
         uow=mock_uow, current_user=mock_user, filter=filter_schema
     )
 
-    mock_uow.tasks.get_many.assert_called_once_with(user_id=mock_user.id, filter=filter_schema)
+    mock_uow.tasks.get_many.assert_called_once_with(user_id=mock_user.id,
+                                                    filter=filter_schema)
     assert result.total == 1
     assert len(result.tasks) == 1
     assert result.tasks[0].id == dummy_task.id
@@ -103,7 +106,8 @@ def test_task_service_read_one_success(mock_uow, mock_user, dummy_task):
         uow=mock_uow, current_user=mock_user, task_id=dummy_task.id
     )
 
-    mock_uow.tasks.get_one.assert_called_once_with(user_id=mock_user.id, task_id=dummy_task.id)
+    mock_uow.tasks.get_one.assert_called_once_with(user_id=mock_user.id,
+                                                   task_id=dummy_task.id)
     assert result.id == dummy_task.id
 
 
@@ -111,11 +115,11 @@ def test_task_service_read_one_not_found(mock_uow, mock_user):
     # Simula o banco não encontrando a tarefa (retornando None)
     mock_uow.tasks.get_one.return_value = None
 
-    # Como deve dar erro 404, usamos o pytest.raises para garantir que a exceção subiu
     with pytest.raises(HTTPException) as exc_info:
-        task_service_read_one(uow=mock_uow, current_user=mock_user, task_id=uuid4())
+        task_service_read_one(uow=mock_uow, current_user=mock_user,
+                              task_id=uuid4())
 
-    assert exc_info.value.status_code == 404
+    assert exc_info.value.status_code == NOT_FOUND_CODE
 
 
 # --- TESTES DE ATUALIZAÇÃO (UPDATE) ---
@@ -126,7 +130,8 @@ def test_task_service_update_success(mock_uow, mock_user, dummy_task):
     mock_uow.tasks.update.return_value = dummy_task
 
     result = task_service_update(
-        uow=mock_uow, current_user=mock_user, task_id=dummy_task.id, data=update_data
+        uow=mock_uow, current_user=mock_user, task_id=dummy_task.id,
+        data=update_data
     )
 
     mock_uow.tasks.update.assert_called_once_with(
@@ -143,10 +148,11 @@ def test_task_service_update_not_found(mock_uow, mock_user):
 
     with pytest.raises(HTTPException) as exc_info:
         task_service_update(
-            uow=mock_uow, current_user=mock_user, task_id=uuid4(), data=update_data
+            uow=mock_uow, current_user=mock_user, task_id=uuid4(),
+            data=update_data
         )
 
-    assert exc_info.value.status_code == 404
+    assert exc_info.value.status_code == NOT_FOUND_CODE
 
 
 # --- TESTES DE EXCLUSÃO (DELETE) ---
@@ -155,7 +161,8 @@ def test_task_service_delete_success(mock_uow, mock_user, dummy_task):
     mock_uow.tasks.get_one.return_value = dummy_task
 
     # Chama o serviço
-    task_service_delete(uow=mock_uow, current_user=mock_user, task_id=dummy_task.id)
+    task_service_delete(
+        uow=mock_uow, current_user=mock_user, task_id=dummy_task.id)
 
     # Garante que buscou E que deletou
     mock_uow.tasks.get_one.assert_called_once()
@@ -167,8 +174,9 @@ def test_task_service_delete_not_found(mock_uow, mock_user):
     mock_uow.tasks.get_one.return_value = None
 
     with pytest.raises(HTTPException) as exc_info:
-        task_service_delete(uow=mock_uow, current_user=mock_user, task_id=uuid4())
+        task_service_delete(
+            uow=mock_uow, current_user=mock_user, task_id=uuid4())
 
-    assert exc_info.value.status_code == 404
+    assert exc_info.value.status_code == NOT_FOUND_CODE
     # Garante que NUNCA chamou o delete se a tarefa não existe
     mock_uow.tasks.delete.assert_not_called()
