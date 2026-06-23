@@ -120,3 +120,41 @@ def test_team_service_add_member_success():
 
     uow.user_teams.add.assert_called_once()
     assert result is not None
+
+
+def test_team_service_add_member_permission_denied():
+    uow = MagicMock()
+
+    uow.teams.get_one.return_value = MagicMock()
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    uow.user_teams.get_one.return_value = None  # não é manager
+
+    data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
+
+    with pytest.raises(PermissionDenied):
+        team_service_add_member(
+            uow=uow, current_user=current_user, team_id=uuid4(), data=data
+        )
+
+
+def test_team_service_add_member_user_not_found():
+    uow = MagicMock()
+
+    uow.teams.get_one.return_value = MagicMock()
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    uow.user_teams.get_one.return_value = MagicMock(role=UserRoleEnum.MANAGER)
+
+    uow.users.get_one.return_value = None
+
+    data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
+
+    with pytest.raises(UserNotFound):
+        team_service_add_member(
+            uow=uow, current_user=current_user, team_id=uuid4(), data=data
+        )
