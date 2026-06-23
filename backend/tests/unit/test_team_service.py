@@ -23,3 +23,73 @@ from tracko.domain.user.user_exc import UserNotFound
 from tracko.domain.user_team.user_team_exc import (
     UserNotInTeam,
 )
+
+
+def test_team_service_create():
+    uow = MagicMock()
+
+    uow.teams.add.side_effect = lambda team: team
+
+    user = MagicMock()
+    user.id = uuid4()
+
+    data = TeamCreateSchema(name='Team A', description='desc')
+
+    result = team_service_create(uow=uow, current_user=user, data=data)
+
+    uow.teams.add.assert_called_once()
+
+    assert result.name == 'Team A'
+    assert result.description == 'desc'
+
+
+def test_team_service_read_many():
+    limit = 10
+    uow = MagicMock()
+
+    team = TeamModel(
+        name='Team A', description='desc', user_id_creator=uuid4()
+    )
+
+    uow.teams.get_many.return_value = ([team], 1)
+
+    filter = FilterTeamSchema(offset=0, limit=limit)
+    user = MagicMock()
+
+    result = team_service_read_many(uow=uow, current_user=user, filter=filter)
+
+    uow.teams.get_many.assert_called_once_with(filter)
+
+    assert result.total == 1
+    assert len(result.teams) == 1
+    assert result.offset == 0
+    assert result.limit == limit
+
+
+def test_team_service_read_one_success():
+    uow = MagicMock()
+
+    team = TeamModel(
+        name='Team A', description='desc', user_id_creator=uuid4()
+    )
+
+    team_id = uuid4()
+    uow.teams.get_one.return_value = team
+
+    user = MagicMock()
+
+    result = team_service_read_one(uow=uow, current_user=user, team_id=team_id)
+
+    uow.teams.get_one.assert_called_once_with(team_id)
+
+    assert result.name == 'Team A'
+
+
+def test_team_service_read_one_not_found():
+    uow = MagicMock()
+    uow.teams.get_one.return_value = None
+
+    user = MagicMock()
+
+    with pytest.raises(TeamNotFound):
+        team_service_read_one(uow=uow, current_user=user, team_id=uuid4())
