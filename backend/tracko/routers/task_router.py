@@ -69,10 +69,7 @@ def task_route_update_status(
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
         return task_service_update(
-            uow=uow,
-            current_user=current_user,
-            task_id=task_id,
-            data=data
+            uow=uow, current_user=current_user, task_id=task_id, data=data
         )
 
 

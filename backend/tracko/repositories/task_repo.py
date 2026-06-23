@@ -54,8 +54,7 @@ class TaskRepository:
     def get_one(self, user_id: UUID, task_id: UUID) -> TaskModel | None:
         task = self._session.scalar(
             select(TaskModel).where(
-                TaskModel.id == task_id,
-                TaskModel.user_id_creator == user_id
+                TaskModel.id == task_id, TaskModel.user_id_creator == user_id
             )
         )
         return task
@@ -67,8 +66,7 @@ class TaskRepository:
         # 1. Busca a tarefa aplicando os dois filtros de uma vez só
         task = self._session.scalar(
             select(TaskModel).where(
-                TaskModel.id == task_id,
-                TaskModel.user_id_creator == user_id
+                TaskModel.id == task_id, TaskModel.user_id_creator == user_id
             )
         )
 

@@ -32,8 +32,7 @@ def task_service_read_many(
     *, uow: UnitOfWork, current_user: UserModel, filter: FilterTaskSchema
 ) -> TaskReadManySchema:
     tasks_db, total = uow.tasks.get_many(
-        user_id=current_user.id,
-        filter=filter
+        user_id=current_user.id, filter=filter
     )
 
     return TaskReadManySchema(
@@ -48,21 +47,19 @@ def task_service_update(
     uow: UnitOfWork,
     current_user: UserModel,
     task_id: UUID,
-    data: TaskUpdateSchema
+    data: TaskUpdateSchema,
 ) -> TaskReadOneSchema:
 
     # Chama o método que criamos no repositório
     updated_task = uow.tasks.update(
-        user_id=current_user.id,
-        task_id=task_id,
-        status=data.status
+        user_id=current_user.id, task_id=task_id, status=data.status
     )
 
     # Se retornou None, a tarefa não existe ou é de outro usuário
     if not updated_task:
         raise HTTPException(
             status_code=status.HTTP_404_NOT_FOUND,
-            detail="Tarefa não encontrada ou não pertence a você."
+            detail='Tarefa não encontrada ou não pertence a você.',
         )
 
     return TaskReadOneSchema.model_validate(updated_task)
@@ -74,7 +71,7 @@ def task_service_read_one(
     # Adicionamos o user_id aqui
     task_db = uow.tasks.get_one(user_id=current_user.id, task_id=task_id)
     if not task_db:
-        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+        raise HTTPException(status_code=404, detail='Tarefa não encontrada')
     return TaskReadOneSchema.model_validate(task_db)
 
 
@@ -84,6 +81,6 @@ def task_service_delete(
     # E adicionamos o user_id aqui também
     task_db = uow.tasks.get_one(user_id=current_user.id, task_id=task_id)
     if not task_db:
-        raise HTTPException(status_code=404, detail="Tarefa não encontrada")
+        raise HTTPException(status_code=404, detail='Tarefa não encontrada')
 
     uow.tasks.delete(task_db)
