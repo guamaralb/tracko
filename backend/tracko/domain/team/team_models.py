@@ -17,17 +17,13 @@ from tracko.domain.user_team.user_team_models import UserTeamModel
 class TeamModel:
     __tablename__ = 'teams'
 
-    id: Mapped[UUID] = mapped_column(
-        Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4
-    )
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4)
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    user_id_creator: Mapped[UUID] = mapped_column(
-        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
-    )
+    user_id_creator: Mapped[UUID] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     # Verification
     created_at: Mapped[datetime] = mapped_column(

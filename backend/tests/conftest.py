@@ -32,9 +32,7 @@ def session(test_engine: Engine):
 
 
 @pytest.fixture
-def client(
-    session: Session, test_engine: Engine, monkeypatch: pytest.MonkeyPatch
-):
+def client(session: Session, test_engine: Engine, monkeypatch: pytest.MonkeyPatch):
     monkeypatch.setattr('tracko.core.database.engine', test_engine)
     monkeypatch.setattr('tracko.app.engine', test_engine)
     monkeypatch.setattr('tracko.app.seed_first_admin_user', lambda _: None)

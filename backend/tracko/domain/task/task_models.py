@@ -18,25 +18,17 @@ from tracko.domain.users_tasks.users_tasks_models import UserTaskModel
 class TaskModel:
     __tablename__ = 'tasks'
 
-    id: Mapped[UUID] = mapped_column(
-        Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4
-    )
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4)
 
     title: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 
-    user_id_creator: Mapped[UUID] = mapped_column(
-        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
-    )
+    user_id_creator: Mapped[UUID] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
 
     description: Mapped[str | None] = mapped_column(Text, nullable=True)
 
-    start_date: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    start_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
-    end_date: Mapped[datetime | None] = mapped_column(
-        DateTime(timezone=True), nullable=True
-    )
+    end_date: Mapped[datetime | None] = mapped_column(DateTime(timezone=True), nullable=True)
 
     status: Mapped[TaskStatusEnum] = mapped_column(
         Enum(TaskStatusEnum, values_callable=lambda e: [i.value for i in e]),

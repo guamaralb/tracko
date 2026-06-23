@@ -38,9 +38,7 @@ def user_route_read_many(
     filter: Annotated[FilterUserSchema, Query()],
 ) -> UserReadManySchema:
     with UnitOfWork(session) as uow:
-        return user_service_read_many(
-            uow=uow, current_user=current_user, filter=filter
-        )
+        return user_service_read_many(uow=uow, current_user=current_user, filter=filter)
 
 
 @router.get('/me', status_code=HTTPStatus.OK)

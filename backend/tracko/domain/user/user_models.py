@@ -18,13 +18,9 @@ from tracko.domain.users_tasks.users_tasks_models import UserTaskModel
 class UserModel:
     __tablename__ = 'users'
 
-    id: Mapped[UUID] = mapped_column(
-        Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4
-    )
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4)
 
-    email: Mapped[str] = mapped_column(
-        String(255), unique=True, nullable=False, index=True
-    )
+    email: Mapped[str] = mapped_column(String(255), unique=True, nullable=False, index=True)
 
     name: Mapped[str] = mapped_column(String(255), nullable=False, index=True)
 

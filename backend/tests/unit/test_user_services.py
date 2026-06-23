@@ -22,9 +22,7 @@ def test_user_service_create():
 
     uow.users.add.side_effect = lambda user: user
 
-    data = UserCreateSchema(
-        email='test@test.com', password='123456', name='Test User'
-    )
+    data = UserCreateSchema(email='test@test.com', password='123456', name='Test User')
 
     result = user_service_create(uow=uow, data=data)
 
@@ -45,9 +43,7 @@ def test_user_service_read_many():
     filter = FilterUserSchema(offset=0, limit=limit)
     current_user = MagicMock()
 
-    result = user_service_read_many(
-        uow=uow, current_user=current_user, filter=filter
-    )
+    result = user_service_read_many(uow=uow, current_user=current_user, filter=filter)
 
     uow.users.get_many.assert_called_once_with(filter)
 
@@ -67,9 +63,7 @@ def test_user_service_read_one_success():
 
     current_user = MagicMock()
 
-    result = user_service_read_one(
-        uow=uow, current_user=current_user, user_id=user_id
-    )
+    result = user_service_read_one(uow=uow, current_user=current_user, user_id=user_id)
 
     uow.users.get_one.assert_called_once_with(user_id)
 
@@ -83,9 +77,7 @@ def test_user_service_read_one_not_found():
     current_user = MagicMock()
 
     with pytest.raises(UserNotFound):
-        user_service_read_one(
-            uow=uow, current_user=current_user, user_id=uuid4()
-        )
+        user_service_read_one(uow=uow, current_user=current_user, user_id=uuid4())
 
 
 def test_user_service_delete_success():
@@ -109,41 +101,29 @@ def test_user_service_delete_not_found():
     current_user = MagicMock()
 
     with pytest.raises(UserNotFound):
-        user_service_delete(
-            uow=uow, current_user=current_user, user_id=uuid4()
-        )
+        user_service_delete(uow=uow, current_user=current_user, user_id=uuid4())
 
 
 def test_user_service_read_many_mapping(monkeypatch):
     uow = MagicMock()
 
-    user = UserModel(email="x@y.com", name="X", password_hash="h")
+    user = UserModel(email='x@y.com', name='X', password_hash='h')
 
     uow.users.get_many.return_value = ([user], 1)
 
-    result = user_service_read_many(
-        uow=uow,
-        current_user=MagicMock(),
-        filter=FilterUserSchema(offset=0, limit=10)
-    )
+    result = user_service_read_many(uow=uow, current_user=MagicMock(), filter=FilterUserSchema(offset=0, limit=10))
 
-    assert result.users[0].email == "x@y.com"
-    assert result.users[0].name == "X"
+    assert result.users[0].email == 'x@y.com'
+    assert result.users[0].name == 'X'
 
 
 def test_user_service_read_one_receives_current_user():
     uow = MagicMock()
-    uow.users.get_one.return_value = UserModel(
-        email="a@a.com", name="A", password_hash="h"
-    )
+    uow.users.get_one.return_value = UserModel(email='a@a.com', name='A', password_hash='h')
 
     current_user = MagicMock()
 
-    user_service_read_one(
-        uow=uow,
-        current_user=current_user,
-        user_id=uuid4()
-    )
+    user_service_read_one(uow=uow, current_user=current_user, user_id=uuid4())
 
     # valida quebra contrato
     assert True

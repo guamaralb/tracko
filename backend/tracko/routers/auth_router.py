@@ -11,13 +11,9 @@ router = APIRouter(prefix='/auth', tags=['auth'])
 
 
 @router.post('/token')
-def login_for_access_token(
-    form_data: OAuth2FormDep, session: SessionDep
-) -> TokenSchema:
+def login_for_access_token(form_data: OAuth2FormDep, session: SessionDep) -> TokenSchema:
     try:
-        return login_for_access_token_service(
-            form_data=form_data, session=session
-        )
+        return login_for_access_token_service(form_data=form_data, session=session)
     except WrongCredentials:
         raise HTTPException(
             status_code=status.HTTP_401_UNAUTHORIZED,

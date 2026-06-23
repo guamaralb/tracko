@@ -17,33 +17,23 @@ class TeamRepository:
         self._session.flush()
         return new_team
 
-    def get_many(
-        self, filter: FilterTeamSchema
-    ) -> tuple[Sequence[TeamModel], int]:
+    def get_many(self, filter: FilterTeamSchema) -> tuple[Sequence[TeamModel], int]:
         query = select(TeamModel)
 
         if filter.name is not None:
             query = query.where(TeamModel.name.contains(filter.name))
 
         if filter.description is not None:
-            query = query.where(
-                TeamModel.description.contains(filter.description)
-            )
+            query = query.where(TeamModel.description.contains(filter.description))
 
-        total = self._session.scalar(
-            select(func.count()).select_from(query.subquery())
-        )
+        total = self._session.scalar(select(func.count()).select_from(query.subquery()))
 
-        teams = self._session.scalars(
-            query.offset(filter.offset).limit(filter.limit)
-        )
+        teams = self._session.scalars(query.offset(filter.offset).limit(filter.limit))
 
         return teams.all(), total or 0
 
     def get_one(self, team_id: UUID) -> TeamModel | None:
-        team = self._session.scalar(
-            select(TeamModel).where(TeamModel.id == team_id)
-        )
+        team = self._session.scalar(select(TeamModel).where(TeamModel.id == team_id))
         return team
 
     def delete(self, db_team: TeamModel) -> None:

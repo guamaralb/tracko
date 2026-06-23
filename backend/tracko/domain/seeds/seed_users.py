@@ -9,11 +9,7 @@ from tracko.domain.user.user_models import UserModel
 def seed_first_admin_user(session: SessionDep):
     print('-- Running Seed: first_admin_user --')
 
-    db_user = session.scalar(
-        select(UserModel).where(
-            UserModel.email == settings.FIRST_ADMIN_USER_EMAIL
-        )
-    )
+    db_user = session.scalar(select(UserModel).where(UserModel.email == settings.FIRST_ADMIN_USER_EMAIL))
 
     if db_user:
         print(f'User {db_user.email} already exists. Skipping.')
@@ -23,9 +19,7 @@ def seed_first_admin_user(session: SessionDep):
         user = UserModel(
             email=settings.FIRST_ADMIN_USER_EMAIL,
             name=settings.FIRST_ADMIN_USER_NAME,
-            password_hash=get_password_hash(
-                settings.FIRST_ADMIN_USER_password
-            ),
+            password_hash=get_password_hash(settings.FIRST_ADMIN_USER_password),
         )
         session.add(user)
         session.flush()

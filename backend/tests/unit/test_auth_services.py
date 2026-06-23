@@ -11,9 +11,7 @@ from tracko.domain.user.user_models import UserModel
 def test_login_success(monkeypatch):
     session = MagicMock()
 
-    user = UserModel(
-        email='test@test.com', password_hash='any_hash', name='Test'
-    )
+    user = UserModel(email='test@test.com', password_hash='any_hash', name='Test')
 
     session.scalar.return_value = user
 
@@ -21,9 +19,7 @@ def test_login_success(monkeypatch):
     form_data.username = 'test@test.com'
     form_data.password = '123456'
 
-    monkeypatch.setattr(
-        'tracko.domain.auth.auth_services.verify_password', lambda p, h: True
-    )
+    monkeypatch.setattr('tracko.domain.auth.auth_services.verify_password', lambda p, h: True)
 
     monkeypatch.setattr(
         'tracko.domain.auth.auth_services.create_access_token',
@@ -54,9 +50,7 @@ def test_login_user_not_found():
 def test_login_wrong_password(monkeypatch):
     session = MagicMock()
 
-    user = UserModel(
-        email='test@test.com', password_hash='hashed_password', name='Test'
-    )
+    user = UserModel(email='test@test.com', password_hash='hashed_password', name='Test')
 
     session.scalar.return_value = user
 
@@ -64,9 +58,7 @@ def test_login_wrong_password(monkeypatch):
     form_data.username = 'test@test.com'
     form_data.password = 'wrong'
 
-    monkeypatch.setattr(
-        'tracko.domain.auth.auth_services.verify_password', lambda p, h: False
-    )
+    monkeypatch.setattr('tracko.domain.auth.auth_services.verify_password', lambda p, h: False)
 
     with pytest.raises(WrongCredentials):
         login_for_access_token_service(form_data, session)
@@ -75,29 +67,23 @@ def test_login_wrong_password(monkeypatch):
 def test_login_token_payload(monkeypatch):
     session = MagicMock()
 
-    user = UserModel(email="test@test.com", password_hash="hash", name="Test")
+    user = UserModel(email='test@test.com', password_hash='hash', name='Test')
     session.scalar.return_value = user
 
     form_data = MagicMock()
-    form_data.username = "test@test.com"
-    form_data.password = "123"
+    form_data.username = 'test@test.com'
+    form_data.password = '123'
 
     called = {}
 
     def fake_create_token(data):
-        called["data"] = data
-        return "token"
+        called['data'] = data
+        return 'token'
 
-    monkeypatch.setattr(
-        "tracko.domain.auth.auth_services.verify_password",
-        lambda p, h: True
-    )
+    monkeypatch.setattr('tracko.domain.auth.auth_services.verify_password', lambda p, h: True)
 
-    monkeypatch.setattr(
-        "tracko.domain.auth.auth_services.create_access_token",
-        fake_create_token
-    )
+    monkeypatch.setattr('tracko.domain.auth.auth_services.create_access_token', fake_create_token)
 
     login_for_access_token_service(form_data, session)
 
-    assert called["data"] == {"sub": "test@test.com"}
+    assert called['data'] == {'sub': 'test@test.com'}

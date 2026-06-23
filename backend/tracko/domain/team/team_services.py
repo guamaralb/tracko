@@ -22,9 +22,7 @@ from tracko.domain.user_team.user_team_exc import (
 from tracko.domain.user_team.user_team_models import UserTeamModel
 
 
-def team_service_create(
-    *, uow: UnitOfWork, current_user: UserModel, data: TeamCreateSchema
-) -> TeamReadOneSchema:
+def team_service_create(*, uow: UnitOfWork, current_user: UserModel, data: TeamCreateSchema) -> TeamReadOneSchema:
     new_team = TeamModel(
         name=data.name,
         description=data.description,
@@ -35,9 +33,7 @@ def team_service_create(
     return TeamReadOneSchema.model_validate(team_db)
 
 
-def team_service_read_many(
-    *, uow: UnitOfWork, current_user: UserModel, filter: FilterTeamSchema
-) -> TeamReadManySchema:
+def team_service_read_many(*, uow: UnitOfWork, current_user: UserModel, filter: FilterTeamSchema) -> TeamReadManySchema:
     teams_db, total = uow.teams.get_many(filter)
 
     return TeamReadManySchema(
@@ -48,18 +44,14 @@ def team_service_read_many(
     )
 
 
-def team_service_read_one(
-    *, uow: UnitOfWork, current_user: UserModel, team_id: UUID
-) -> TeamReadOneSchema:
+def team_service_read_one(*, uow: UnitOfWork, current_user: UserModel, team_id: UUID) -> TeamReadOneSchema:
     team_db = uow.teams.get_one(team_id)
     if not team_db:
         raise TeamNotFound()
     return TeamReadOneSchema.model_validate(team_db)
 
 
-def team_service_delete(
-    *, uow: UnitOfWork, current_user: UserModel, team_id: UUID
-) -> None:
+def team_service_delete(*, uow: UnitOfWork, current_user: UserModel, team_id: UUID) -> None:
     db_team = uow.teams.get_one(team_id)
     if not db_team:
         raise TeamNotFound()
@@ -84,9 +76,7 @@ def team_service_add_member(
         raise TeamNotFound()
 
     db_current_user_team = uow.user_teams.get_one(current_user.id, team_id)
-    if (not db_current_user_team) or (
-        db_current_user_team.role != UserRoleEnum.MANAGER
-    ):
+    if (not db_current_user_team) or (db_current_user_team.role != UserRoleEnum.MANAGER):
         raise PermissionDenied()
 
     db_target_user = uow.users.get_one(data.user_id)
@@ -97,9 +87,7 @@ def team_service_add_member(
     if db_target_user_team:
         raise UserAlreadyInTeam()
 
-    new_user_team = UserTeamModel(
-        user_id=data.user_id, team_id=team_id, role=data.role
-    )
+    new_user_team = UserTeamModel(user_id=data.user_id, team_id=team_id, role=data.role)
 
     user_team_db = uow.user_teams.add(new_user_team)
     return TeamMemberReadOneSchema.model_validate(user_team_db)
@@ -117,9 +105,7 @@ def team_service_remove_member(
         raise TeamNotFound()
 
     db_current_user_team = uow.user_teams.get_one(current_user.id, team_id)
-    if (not db_current_user_team) or (
-        db_current_user_team.role != UserRoleEnum.MANAGER
-    ):
+    if (not db_current_user_team) or (db_current_user_team.role != UserRoleEnum.MANAGER):
         raise PermissionDenied()
 
     db_target_user_team = uow.user_teams.get_one(user_id, team_id)

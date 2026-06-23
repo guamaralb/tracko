@@ -33,9 +33,7 @@ def team_route_create(
     data: TeamCreateSchema,
 ) -> TeamReadOneSchema:
     with UnitOfWork(session) as uow:
-        return team_service_create(
-            uow=uow, current_user=current_user, data=data
-        )
+        return team_service_create(uow=uow, current_user=current_user, data=data)
 
 
 @router.get('/', status_code=HTTPStatus.OK)
@@ -45,9 +43,7 @@ def team_route_read_many(
     filter: Annotated[FilterTeamSchema, Query()],
 ) -> TeamReadManySchema:
     with UnitOfWork(session) as uow:
-        return team_service_read_many(
-            uow=uow, current_user=current_user, filter=filter
-        )
+        return team_service_read_many(uow=uow, current_user=current_user, filter=filter)
 
 
 @router.get('/{team_id}', status_code=HTTPStatus.OK)
@@ -57,9 +53,7 @@ def team_route_read_one(
     team_id: UUID,
 ) -> TeamReadOneSchema:
     with UnitOfWork(session) as uow:
-        return team_service_read_one(
-            uow=uow, current_user=current_user, team_id=team_id
-        )
+        return team_service_read_one(uow=uow, current_user=current_user, team_id=team_id)
 
 
 @router.delete('/{team_id}', status_code=HTTPStatus.NO_CONTENT)
@@ -89,14 +83,10 @@ def team_route_add_member(
     data: TeamAddMemberSchema,
 ) -> TeamMemberReadOneSchema:
     with UnitOfWork(session) as uow:
-        return team_service_add_member(
-            uow=uow, current_user=current_user, team_id=team_id, data=data
-        )
+        return team_service_add_member(uow=uow, current_user=current_user, team_id=team_id, data=data)
 
 
-@router.delete(
-    '/{team_id}/members/{user_id}', status_code=HTTPStatus.NO_CONTENT
-)
+@router.delete('/{team_id}/members/{user_id}', status_code=HTTPStatus.NO_CONTENT)
 def team_route_remove_member(
     session: SessionDep,
     current_user: CurrentUserDep,

@@ -12,9 +12,7 @@ from tracko.domain.user.user_schemas import (
 )
 
 
-def user_service_create(
-    *, uow: UnitOfWork, data: UserCreateSchema
-) -> UserReadOneSchema:
+def user_service_create(*, uow: UnitOfWork, data: UserCreateSchema) -> UserReadOneSchema:
     password_hash = get_password_hash(data.password)
 
     new_user = UserModel(
@@ -26,9 +24,7 @@ def user_service_create(
     return UserReadOneSchema.model_validate(user_db)
 
 
-def user_service_read_many(
-    *, uow: UnitOfWork, current_user: UserModel, filter: FilterUserSchema
-) -> UserReadManySchema:
+def user_service_read_many(*, uow: UnitOfWork, current_user: UserModel, filter: FilterUserSchema) -> UserReadManySchema:
     users_db, total = uow.users.get_many(filter)
 
     return UserReadManySchema(
@@ -39,9 +35,7 @@ def user_service_read_many(
     )
 
 
-def user_service_read_one(
-    *, uow: UnitOfWork, current_user: UserModel, user_id: UUID
-) -> UserReadOneSchema:
+def user_service_read_one(*, uow: UnitOfWork, current_user: UserModel, user_id: UUID) -> UserReadOneSchema:
     user_db = uow.users.get_one(user_id)
 
     if not user_db:
@@ -50,9 +44,7 @@ def user_service_read_one(
         return UserReadOneSchema.model_validate(user_db)
 
 
-def user_service_delete(
-    *, uow: UnitOfWork, current_user: UserModel, user_id: UUID
-) -> None:
+def user_service_delete(*, uow: UnitOfWork, current_user: UserModel, user_id: UUID) -> None:
     db_user = uow.users.get_one(user_id)
     if not db_user:
         raise UserNotFound()

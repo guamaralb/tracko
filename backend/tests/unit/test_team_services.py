@@ -47,9 +47,7 @@ def test_team_service_read_many():
     limit = 10
     uow = MagicMock()
 
-    team = TeamModel(
-        name='Team A', description='desc', user_id_creator=uuid4()
-    )
+    team = TeamModel(name='Team A', description='desc', user_id_creator=uuid4())
 
     uow.teams.get_many.return_value = ([team], 1)
 
@@ -69,9 +67,7 @@ def test_team_service_read_many():
 def test_team_service_read_one_success():
     uow = MagicMock()
 
-    team = TeamModel(
-        name='Team A', description='desc', user_id_creator=uuid4()
-    )
+    team = TeamModel(name='Team A', description='desc', user_id_creator=uuid4())
 
     team_id = uuid4()
     uow.teams.get_one.return_value = team
@@ -114,9 +110,7 @@ def test_team_service_add_member_success():
 
     data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
 
-    result = team_service_add_member(
-        uow=uow, current_user=current_user, team_id=uuid4(), data=data
-    )
+    result = team_service_add_member(uow=uow, current_user=current_user, team_id=uuid4(), data=data)
 
     uow.user_teams.add.assert_called_once()
     assert result is not None
@@ -135,9 +129,7 @@ def test_team_service_add_member_permission_denied():
     data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
 
     with pytest.raises(PermissionDenied):
-        team_service_add_member(
-            uow=uow, current_user=current_user, team_id=uuid4(), data=data
-        )
+        team_service_add_member(uow=uow, current_user=current_user, team_id=uuid4(), data=data)
 
 
 def test_team_service_add_member_user_not_found():
@@ -155,9 +147,7 @@ def test_team_service_add_member_user_not_found():
     data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
 
     with pytest.raises(UserNotFound):
-        team_service_add_member(
-            uow=uow, current_user=current_user, team_id=uuid4(), data=data
-        )
+        team_service_add_member(uow=uow, current_user=current_user, team_id=uuid4(), data=data)
 
 
 def test_team_service_remove_member_not_in_team():
@@ -193,12 +183,7 @@ def test_add_member_team_not_found():
     data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
 
     with pytest.raises(TeamNotFound):
-        team_service_add_member(
-            uow=uow,
-            current_user=current_user,
-            team_id=uuid4(),
-            data=data
-        )
+        team_service_add_member(uow=uow, current_user=current_user, team_id=uuid4(), data=data)
 
 
 def test_team_service_create_sets_creator():
@@ -207,7 +192,7 @@ def test_team_service_create_sets_creator():
     captured = {}
 
     def fake_add(team):
-        captured["team"] = team
+        captured['team'] = team
         return team
 
     uow.teams.add.side_effect = fake_add
@@ -215,8 +200,8 @@ def test_team_service_create_sets_creator():
     current_user = MagicMock()
     current_user.id = uuid4()
 
-    data = TeamCreateSchema(name="Team A", description="desc")
+    data = TeamCreateSchema(name='Team A', description='desc')
 
     team_service_create(uow=uow, current_user=current_user, data=data)
 
-    assert captured["team"].user_id_creator == current_user.id
+    assert captured['team'].user_id_creator == current_user.id

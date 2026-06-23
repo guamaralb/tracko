@@ -16,19 +16,11 @@ from tracko.domain.user.user_enums import UserRoleEnum
 class UserTeamModel:
     __tablename__ = 'users_teams'
 
-    id: Mapped[UUID] = mapped_column(
-        Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4
-    )
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4)
     # FK
-    user_id: Mapped[UUID] = mapped_column(
-        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
-    )
-    team_id: Mapped[UUID] = mapped_column(
-        ForeignKey('teams.id', ondelete='CASCADE'), nullable=False
-    )
-    role: Mapped[UserRoleEnum] = mapped_column(
-        Enum(UserRoleEnum, values_callable=lambda e: [i.value for i in e])
-    )
+    user_id: Mapped[UUID] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    team_id: Mapped[UUID] = mapped_column(ForeignKey('teams.id', ondelete='CASCADE'), nullable=False)
+    role: Mapped[UserRoleEnum] = mapped_column(Enum(UserRoleEnum, values_callable=lambda e: [i.value for i in e]))
 
     # Verification
     created_at: Mapped[datetime] = mapped_column(
@@ -50,6 +42,4 @@ class UserTeamModel:
         self.modified_at = self.created_at
 
     # Restriction
-    __table_args__ = (
-        UniqueConstraint('user_id', 'team_id', name='uq_user_team'),
-    )
+    __table_args__ = (UniqueConstraint('user_id', 'team_id', name='uq_user_team'),)

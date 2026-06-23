@@ -20,16 +20,10 @@ from tracko.core.database import table_registry
 class UserTaskModel:
     __tablename__ = 'users_tasks'
 
-    id: Mapped[UUID] = mapped_column(
-        Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4
-    )
+    id: Mapped[UUID] = mapped_column(Uuid(as_uuid=True), init=False, primary_key=True, default_factory=uuid4)
     # FK
-    user_id: Mapped[UUID] = mapped_column(
-        ForeignKey('users.id', ondelete='CASCADE'), nullable=False
-    )
-    task_id: Mapped[UUID] = mapped_column(
-        ForeignKey('tasks.id', ondelete='CASCADE'), nullable=False
-    )
+    user_id: Mapped[UUID] = mapped_column(ForeignKey('users.id', ondelete='CASCADE'), nullable=False)
+    task_id: Mapped[UUID] = mapped_column(ForeignKey('tasks.id', ondelete='CASCADE'), nullable=False)
 
     # Verification
     created_at: Mapped[datetime] = mapped_column(
@@ -51,6 +45,4 @@ class UserTaskModel:
         self.modified_at = self.created_at
 
     # Restriction
-    __table_args__ = (
-        UniqueConstraint('user_id', 'task_id', name='uq_user_task'),
-    )
+    __table_args__ = (UniqueConstraint('user_id', 'task_id', name='uq_user_task'),)

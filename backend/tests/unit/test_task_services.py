@@ -61,10 +61,7 @@ def test_task_service_read_many():
 
     result = task_service_read_many(uow=uow, current_user=user, filter=filter)
 
-    uow.tasks.get_many.assert_called_once_with(
-        user_id=user_id,
-        filter=filter
-    )
+    uow.tasks.get_many.assert_called_once_with(user_id=user_id, filter=filter)
 
     assert result.total == 1
     assert len(result.tasks) == 1
@@ -92,10 +89,7 @@ def test_task_service_read_one_success():
 
     result = task_service_read_one(uow=uow, current_user=user, task_id=task_id)
 
-    uow.tasks.get_one.assert_called_once_with(
-        user_id=user_id,
-        task_id=task_id
-    )
+    uow.tasks.get_one.assert_called_once_with(user_id=user_id, task_id=task_id)
     assert result.title == 'Task 1'
 
 
@@ -145,7 +139,7 @@ def test_task_service_create_sets_creator():
     captured = {}
 
     def fake_add(task):
-        captured["task"] = task
+        captured['task'] = task
         return task
 
     uow.tasks.add.side_effect = fake_add
@@ -154,17 +148,13 @@ def test_task_service_create_sets_creator():
     current_user.id = uuid4()
 
     data = TaskCreateSchema(
-        title="Test Task",
-        description="desc",
+        title='Test Task',
+        description='desc',
         start_date=None,
         end_date=None,
     )
 
-    result = task_service_create(
-        uow=uow,
-        current_user=current_user,
-        data=data
-    )
+    result = task_service_create(uow=uow, current_user=current_user, data=data)
 
-    assert result.title == "Test Task"
-    assert captured["task"].user_id_creator == current_user.id
+    assert result.title == 'Test Task'
+    assert captured['task'].user_id_creator == current_user.id

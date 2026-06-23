@@ -3,11 +3,11 @@ from http import HTTPStatus
 
 def test_create_team(client, token_admin):
     response = client.post(
-        "/teams/",
-        headers={"Authorization": f"Bearer {token_admin}"},
+        '/teams/',
+        headers={'Authorization': f'Bearer {token_admin}'},
         json={
-            "name": "Team A",
-            "description": "desc",
+            'name': 'Team A',
+            'description': 'desc',
         },
     )
 
@@ -15,41 +15,41 @@ def test_create_team(client, token_admin):
 
     data = response.json()
 
-    assert data["id"] is not None
-    assert data["name"] == "Team A"
+    assert data['id'] is not None
+    assert data['name'] == 'Team A'
 
 
 def test_read_many_teams(client, token_admin):
     response = client.get(
-        "/teams/",
-        headers={"Authorization": f"Bearer {token_admin}"},
-        params={"offset": 0, "limit": 10},
+        '/teams/',
+        headers={'Authorization': f'Bearer {token_admin}'},
+        params={'offset': 0, 'limit': 10},
     )
 
     assert response.status_code == HTTPStatus.OK
 
     data = response.json()
 
-    assert "teams" in data
-    assert "total" in data
+    assert 'teams' in data
+    assert 'total' in data
 
 
 def test_read_one_team(client, token_admin):
     create = client.post(
-        "/teams/",
-        headers={"Authorization": f"Bearer {token_admin}"},
+        '/teams/',
+        headers={'Authorization': f'Bearer {token_admin}'},
         json={
-            "name": "Team One",
-            "description": "desc",
+            'name': 'Team One',
+            'description': 'desc',
         },
     )
 
-    team_id = create.json()["id"]
+    team_id = create.json()['id']
 
     response = client.get(
-        f"/teams/{team_id}",
-        headers={"Authorization": f"Bearer {token_admin}"},
+        f'/teams/{team_id}',
+        headers={'Authorization': f'Bearer {token_admin}'},
     )
 
     assert response.status_code == HTTPStatus.OK
-    assert response.json()["id"] == team_id
+    assert response.json()['id'] == team_id

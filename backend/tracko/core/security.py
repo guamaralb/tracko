@@ -15,9 +15,7 @@ password_context = PasswordHash.recommended()
 
 def create_access_token(data: dict) -> str:
     to_encode = data.copy()
-    encoded_jwt = encode(
-        to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM
-    )
+    encoded_jwt = encode(to_encode, settings.SECRET_KEY, algorithm=settings.ALGORITHM)
     return encoded_jwt
 
 
@@ -29,9 +27,7 @@ def verify_password(plain_password: str, hashed_password: str) -> bool:
     return password_context.verify(plain_password, hashed_password)
 
 
-oauth2_scheme = OAuth2PasswordBearer(
-    tokenUrl='auth/token', refreshUrl='auth/refresh_token'
-)
+oauth2_scheme = OAuth2PasswordBearer(tokenUrl='auth/token', refreshUrl='auth/refresh_token')
 
 
 def get_current_user(
@@ -40,9 +36,7 @@ def get_current_user(
     token: str = Depends(oauth2_scheme),
 ) -> UserModel | None:
     try:
-        payload = decode(
-            token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM]
-        )
+        payload = decode(token, settings.SECRET_KEY, algorithms=[settings.ALGORITHM])
         subject_email = payload.get('sub')
 
         if not subject_email:
@@ -54,8 +48,6 @@ def get_current_user(
     except ExpiredSignatureError:
         raise InvalidToken()
 
-    db_user = session.scalar(
-        select(UserModel).where(UserModel.email == subject_email)
-    )
+    db_user = session.scalar(select(UserModel).where(UserModel.email == subject_email))
 
     return db_user

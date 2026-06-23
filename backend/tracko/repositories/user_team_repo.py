@@ -17,9 +17,7 @@ class UserTeamRepository:
         self._session.flush()
         return new_team
 
-    def get_many(
-        self, filter: FilterUserTeamSchema
-    ) -> tuple[Sequence[UserTeamModel], int]:
+    def get_many(self, filter: FilterUserTeamSchema) -> tuple[Sequence[UserTeamModel], int]:
         query = select(UserTeamModel)
 
         if filter.user_id is not None:
@@ -31,13 +29,9 @@ class UserTeamRepository:
         if filter.role is not None:
             query = query.where(UserTeamModel.role == filter.role)
 
-        total = self._session.scalar(
-            select(func.count()).select_from(query.subquery())
-        )
+        total = self._session.scalar(select(func.count()).select_from(query.subquery()))
 
-        teams = self._session.scalars(
-            query.offset(filter.offset).limit(filter.limit)
-        )
+        teams = self._session.scalars(query.offset(filter.offset).limit(filter.limit))
 
         return teams.all(), total or 0
 

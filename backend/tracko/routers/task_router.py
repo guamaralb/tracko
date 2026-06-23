@@ -31,9 +31,7 @@ def task_route_create(
     data: TaskCreateSchema,
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
-        return task_service_create(
-            uow=uow, current_user=current_user, data=data
-        )
+        return task_service_create(uow=uow, current_user=current_user, data=data)
 
 
 @router.get('/', status_code=HTTPStatus.OK)
@@ -43,9 +41,7 @@ def task_route_read_many(
     filter: Annotated[FilterTaskSchema, Query()],
 ) -> TaskReadManySchema:
     with UnitOfWork(session) as uow:
-        return task_service_read_many(
-            uow=uow, current_user=current_user, filter=filter
-        )
+        return task_service_read_many(uow=uow, current_user=current_user, filter=filter)
 
 
 @router.get('/{task_id}', status_code=HTTPStatus.OK)
@@ -55,9 +51,7 @@ def task_route_read_one(
     task_id: UUID,
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
-        return task_service_read_one(
-            uow=uow, current_user=current_user, task_id=task_id
-        )
+        return task_service_read_one(uow=uow, current_user=current_user, task_id=task_id)
 
 
 @router.patch('/{task_id}', status_code=HTTPStatus.OK)
@@ -68,9 +62,7 @@ def task_route_update_status(
     data: TaskUpdateSchema,
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
-        return task_service_update(
-            uow=uow, current_user=current_user, task_id=task_id, data=data
-        )
+        return task_service_update(uow=uow, current_user=current_user, task_id=task_id, data=data)
 
 
 @router.delete('/{task_id}', status_code=HTTPStatus.NO_CONTENT)
@@ -80,6 +72,4 @@ def task_route_delete(
     task_id: UUID,
 ) -> None:
     with UnitOfWork(session) as uow:
-        return task_service_delete(
-            uow=uow, current_user=current_user, task_id=task_id
-        )
+        return task_service_delete(uow=uow, current_user=current_user, task_id=task_id)
