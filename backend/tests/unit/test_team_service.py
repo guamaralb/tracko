@@ -93,3 +93,30 @@ def test_team_service_read_one_not_found():
 
     with pytest.raises(TeamNotFound):
         team_service_read_one(uow=uow, current_user=user, team_id=uuid4())
+
+
+def test_team_service_add_member_success():
+    uow = MagicMock()
+
+    uow.teams.get_one.return_value = MagicMock()
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    uow.user_teams.get_one.side_effect = [
+        MagicMock(role=UserRoleEnum.MANAGER),  # current user in team
+        None,  # target user not in team
+    ]
+
+    uow.users.get_one.return_value = MagicMock()
+
+    uow.user_teams.add.side_effect = lambda x: x
+
+    data = TeamAddMemberSchema(user_id=uuid4(), role=UserRoleEnum.COLLABORATOR)
+
+    result = team_service_add_member(
+        uow=uow, current_user=current_user, team_id=uuid4(), data=data
+    )
+
+    uow.user_teams.add.assert_called_once()
+    assert result is not None
