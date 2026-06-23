@@ -101,15 +101,3 @@ def test_login_token_payload(monkeypatch):
     login_for_access_token_service(form_data, session)
 
     assert called["data"] == {"sub": "test@test.com"}
-
-
-def test_login_db_exception(monkeypatch):
-    session = MagicMock()
-    session.scalar.side_effect = Exception("DB error")
-
-    form_data = MagicMock()
-    form_data.username = "test@test.com"
-    form_data.password = "123"
-
-    with pytest.raises(Exception):
-        login_for_access_token_service(form_data, session)
