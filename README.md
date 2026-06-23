@@ -1,9 +1,3 @@
-Seu arquivo `README.md` está bem estruturado, mas como o sistema evoluiu de um CLI simples para uma **API completa com Frontend e Backend**, o arquivo precisa refletir essa mudança para que qualquer pessoa (ou professor) entenda a nova arquitetura.
-
-Aqui está uma versão atualizada e profissional do seu `README.md`:
-
----
-
 # Tracko - Sistema de Gerenciamento de Tarefas
 
 ## 1. Membros do Grupo
