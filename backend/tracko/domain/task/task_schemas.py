@@ -50,5 +50,6 @@ class FilterTaskSchema(FilterPageSchema):
     end_date: datetime | None = None
     status: TaskStatusEnum | None = None
 
+
 class TaskUpdateSchema(BaseModel):
     status: TaskStatusEnum

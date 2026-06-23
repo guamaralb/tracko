@@ -18,7 +18,7 @@ from tracko.domain.task.task_services import (
     task_service_delete,
     task_service_read_many,
     task_service_read_one,
-    task_service_update
+    task_service_update,
 )
 
 router = APIRouter(prefix='/tasks', tags=['tasks'])
@@ -59,20 +59,22 @@ def task_route_read_one(
             uow=uow, current_user=current_user, task_id=task_id
         )
 
+
 @router.patch('/{task_id}', status_code=HTTPStatus.OK)
 def task_route_update_status(
     session: SessionDep,
     current_user: CurrentUserDep,
     task_id: UUID,
-    data: TaskUpdateSchema, # <-- O FastAPI vai ler o JSON do corpo da requisição
+    data: TaskUpdateSchema,
 ) -> TaskReadOneSchema:
     with UnitOfWork(session) as uow:
         return task_service_update(
-            uow=uow, 
-            current_user=current_user, 
+            uow=uow,
+            current_user=current_user,
             task_id=task_id,
             data=data
         )
+
 
 @router.delete('/{task_id}', status_code=HTTPStatus.NO_CONTENT)
 def task_route_delete(
