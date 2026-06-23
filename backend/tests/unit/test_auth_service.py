@@ -7,6 +7,7 @@ from tracko.domain.auth.auth_schemas import TokenSchema
 from tracko.domain.auth.auth_services import login_for_access_token_service
 from tracko.domain.user.user_models import UserModel
 
+
 def test_login_success(monkeypatch):
     session = MagicMock()
 
@@ -48,6 +49,7 @@ def test_login_user_not_found():
 
     with pytest.raises(WrongCredentials):
         login_for_access_token_service(form_data, session)
+
 
 def test_login_wrong_password(monkeypatch):
     session = MagicMock()
