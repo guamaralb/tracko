@@ -56,3 +56,33 @@ def test_user_service_read_many():
     assert len(result.users) == 1
     assert result.offset == 0
     assert result.limit == limit
+
+def test_user_service_read_one_success():
+    uow = MagicMock()
+
+    user = UserModel(email='a@a.com', name='User A', password_hash='hash')
+
+    user_id = uuid4()
+    uow.users.get_one.return_value = user
+
+    current_user = MagicMock()
+
+    result = user_service_read_one(
+        uow=uow, current_user=current_user, user_id=user_id
+    )
+
+    uow.users.get_one.assert_called_once_with(user_id)
+
+    assert result.email == 'a@a.com'
+
+
+def test_user_service_read_one_not_found():
+    uow = MagicMock()
+    uow.users.get_one.return_value = None
+
+    current_user = MagicMock()
+
+    with pytest.raises(UserNotFound):
+        user_service_read_one(
+            uow=uow, current_user=current_user, user_id=uuid4()
+        )
