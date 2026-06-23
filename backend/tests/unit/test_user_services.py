@@ -25,6 +25,7 @@ def mock_uow():
     uow.users.reset_mock()
     return uow
 
+
 @pytest.fixture
 def dummy_user():
     user = MagicMock(spec=UserModel)
@@ -42,13 +43,13 @@ def dummy_user():
 def test_user_service_create_success(mock_get_hash, mock_uow, dummy_user):
     # Simula o retorno da função de hash
     mock_get_hash.return_value = "hashed_password"
-    
+
     schema_in = UserCreateSchema(
         name="username",
         email="name@email.com",
         password="senha123"
     )
-    
+
     mock_uow.users.add.return_value = dummy_user
 
     result = user_service_create(uow=mock_uow, data=schema_in)
@@ -73,6 +74,7 @@ def test_user_service_read_one_success(mock_uow, dummy_user):
 
     mock_uow.users.get_one.assert_called_once_with(dummy_user.id)
     assert result.id == dummy_user.id
+
 
 def test_user_service_read_one_not_found(mock_uow, dummy_user):
     mock_uow.users.get_one.return_value = None
@@ -109,6 +111,7 @@ def test_user_service_delete_success(mock_uow, dummy_user):
     user_service_delete(uow=mock_uow, current_user=dummy_user, user_id=dummy_user.id)
 
     mock_uow.users.delete.assert_called_once_with(dummy_user)
+
 
 def test_user_service_delete_not_found(mock_uow, dummy_user):
     mock_uow.users.get_one.return_value = None
