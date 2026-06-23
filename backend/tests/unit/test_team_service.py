@@ -158,3 +158,25 @@ def test_team_service_add_member_user_not_found():
         team_service_add_member(
             uow=uow, current_user=current_user, team_id=uuid4(), data=data
         )
+
+
+def test_team_service_remove_member_not_in_team():
+    uow = MagicMock()
+
+    uow.teams.get_one.return_value = MagicMock()
+
+    current_user = MagicMock()
+    current_user.id = uuid4()
+
+    uow.user_teams.get_one.side_effect = [
+        MagicMock(role=UserRoleEnum.MANAGER),  # current user
+        None,  # target user not in team
+    ]
+
+    with pytest.raises(UserNotInTeam):
+        team_service_remove_member(
+            uow=uow,
+            current_user=current_user,
+            team_id=uuid4(),
+            user_id=uuid4(),
+        )
